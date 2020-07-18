@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import PlusIcon from "./icons/PlusIcon";
 
 interface List {
@@ -12,20 +13,24 @@ interface Props
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  boardList: List[];
+  children: React.ReactNode;
+  className: string;
   onClick: () => void;
 }
 
-const CreateList: React.FC<Props> = ({ onClick, boardList }) => {
+const CreateItem: React.FC<Props> = ({ children, className, onClick }) => {
   return (
     <button
-      className="flex items-center w-64 h-10 px-4 py-2 mx-2 text-sm text-white bg-blue-400 rounded-sm hover:bg-blue-300 focus:outline-none"
+      className={clsx(
+        "flex items-center rounded-sm focus:outline-none",
+        className
+      )}
       onClick={onClick}
     >
       <PlusIcon className="w-4 h-4 mr-2" />
-      {boardList ? "Add another list" : "Add a list"}
+      {children}
     </button>
   );
 };
 
-export default CreateList;
+export default CreateItem;
