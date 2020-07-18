@@ -1,6 +1,6 @@
 import React from "react";
 
-const CreateList = ({ onClick }) => {
+const CreateList = ({ onClick, list }) => {
   return (
     <button
       className="flex items-center w-64 h-10 px-4 py-2 mx-2 text-sm text-white bg-blue-400 rounded-sm hover:bg-blue-300 focus:outline-none"
@@ -17,7 +17,7 @@ const CreateList = ({ onClick }) => {
       >
         <path d="M12 4v16m8-8H4"></path>
       </svg>
-      Add a list
+      {list.length ? "Add another list" : "Add a list"}
     </button>
   );
 };

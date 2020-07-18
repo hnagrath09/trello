@@ -52,7 +52,7 @@ const App = () => {
             }) => setListTitle(event.target.value)}
           />
         ) : (
-          <CreateList onClick={handleNewList} />
+          <CreateList onClick={handleNewList} list={list} />
         )}
       </div>
     </div>
