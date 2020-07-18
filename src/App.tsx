@@ -12,6 +12,7 @@ interface List {
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [list, setList] = useState<List[]>([]);
+  const [listTitle, setListTitle] = useState("");
 
   const handleNewList = () => {
     setNewList(true);
@@ -22,18 +23,18 @@ const App = () => {
   };
 
   const handleCreateList = () => {
-    const id = Date.now();
-    const newList = {
-      id: id,
-      order: list.length + 1,
-      title: "Untitled Column",
-    };
-    console.log("new list", newList);
-    setList((prevList) => [...prevList, newList]);
-    setNewList(false);
+    if (listTitle) {
+      const id = Date.now();
+      const newList = {
+        id: id,
+        order: list.length + 1,
+        title: listTitle,
+      };
+      setList((prevList) => [...prevList, newList]);
+      setListTitle("");
+      setNewList(false);
+    }
   };
-
-  console.log("list", list);
 
   return (
     <div className="flex-col w-screen h-screen bg-blue-600">
@@ -46,6 +47,9 @@ const App = () => {
           <NewList
             createList={handleCreateList}
             cancelList={handleCancelList}
+            onChange={(event: {
+              target: { value: React.SetStateAction<string> };
+            }) => setListTitle(event.target.value)}
           />
         ) : (
           <CreateList onClick={handleNewList} />
