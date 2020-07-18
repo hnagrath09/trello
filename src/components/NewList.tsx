@@ -11,8 +11,6 @@ interface Props
 }
 
 const NewList: React.FC<Props> = ({ cancelList, createList, onChange }) => {
-  // const [listTitle, setListTitle] = useState("");
-
   return (
     <div className="w-64 p-1 mx-2 bg-gray-200">
       <input
@@ -20,7 +18,6 @@ const NewList: React.FC<Props> = ({ cancelList, createList, onChange }) => {
         placeholder="Enter list title..."
         autoFocus
         onChange={onChange}
-        // onChange={(event) => setListTitle(event.target.value)}
       ></input>
       <div className="flex items-center justify-between">
         <button

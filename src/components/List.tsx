@@ -1,15 +1,16 @@
 import React from "react";
-import PlusIcon from "./icons/PlusIcon";
+import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
 
 interface Props
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
+  children: React.ReactNode;
   title: string;
 }
 
-const List: React.FC<Props> = ({ title }) => {
+const List: React.FC<Props> = ({ children, title }) => {
   return (
     <div className="w-64 py-2 mx-2 bg-gray-400 rounded-sm ">
       <div className="flex items-center justify-between">
@@ -17,23 +18,10 @@ const List: React.FC<Props> = ({ title }) => {
           {title}
         </div>
         <div className="p-1 mr-1 rounded-sm cursor-pointer hover:bg-gray-500">
-          <svg
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-          </svg>
+          <HorizontalDotsIcon className="w-4 h-4" />
         </div>
       </div>
-      <div className="flex items-center px-3 py-1 mx-3 mt-3 text-sm text-gray-700 rounded-sm cursor-pointer hover:bg-gray-500">
-        <PlusIcon className="w-4 h-4 mr-2" />
-        Add a card
-      </div>
+      {children}
     </div>
   );
 };
