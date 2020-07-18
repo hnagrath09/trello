@@ -1,6 +1,15 @@
 import React from "react";
+import PlusIcon from "./icons/PlusIcon";
 
-const List = ({ title }) => {
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
+  title: string;
+}
+
+const List: React.FC<Props> = ({ title }) => {
   return (
     <div className="w-64 py-2 mx-2 bg-gray-400 rounded-sm ">
       <div className="flex items-center justify-between">
@@ -22,17 +31,7 @@ const List = ({ title }) => {
         </div>
       </div>
       <div className="flex items-center px-3 py-1 mx-3 mt-3 text-sm text-gray-700 rounded-sm cursor-pointer hover:bg-gray-500">
-        <svg
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="3"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          className="w-4 h-4 mr-2"
-        >
-          <path d="M12 4v16m8-8H4"></path>
-        </svg>
+        <PlusIcon className="w-4 h-4 mr-2" />
         Add a card
       </div>
     </div>

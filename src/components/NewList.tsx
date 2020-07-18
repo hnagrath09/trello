@@ -1,6 +1,16 @@
 import React from "react";
 
-const NewList = ({ cancelList, createList, onChange }) => {
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
+  cancelList: () => void;
+  createList: () => void;
+  onChange: any;
+}
+
+const NewList: React.FC<Props> = ({ cancelList, createList, onChange }) => {
   // const [listTitle, setListTitle] = useState("");
 
   return (
