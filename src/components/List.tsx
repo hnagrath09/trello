@@ -12,7 +12,7 @@ interface Props
 
 const List: React.FC<Props> = ({ children, title }) => {
   return (
-    <div className="w-64 py-2 mx-2 bg-gray-400 rounded-sm ">
+    <div className="w-64 py-2 mx-2 bg-gray-300 rounded-sm ">
       <div className="flex items-center justify-between">
         <div className="w-full ml-3 text-sm font-semibold text-gray-800 cursor-pointer">
           {title}
