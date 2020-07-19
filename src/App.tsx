@@ -68,11 +68,11 @@ const App = () => {
               (task) =>
                 task.parentId === column.id && (
                   <div
-                    className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow"
+                    className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow cursor-pointer group"
                     key={task.id}
                   >
                     {task.title}
-                    <PencilIcon className="w-3 h-3" />
+                    <PencilIcon className="hidden w-3 h-3 group-hover:block" />
                   </div>
                 )
             )}
