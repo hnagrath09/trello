@@ -10,6 +10,13 @@ interface List {
   title: string;
 }
 
+interface Card {
+  id: number;
+  parentId: number;
+  order: number;
+  title: string;
+}
+
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
@@ -17,13 +24,14 @@ const App = () => {
 
   const [newCard, setNewCard] = useState<boolean>(false);
   const [cardTitle, setCardTitle] = useState<string>("");
-  const [card, setCard] = useState<List[]>([]);
+  const [card, setCard] = useState<Card[]>([]);
 
-  const handleCreateCard = () => {
+  const handleCreateCard = (listId: number) => {
     if (cardTitle) {
       const id = Date.now();
       const newCard = {
         id: id,
+        parentId: listId,
         order: list.length + 1,
         title: cardTitle,
       };
@@ -53,19 +61,22 @@ const App = () => {
       <div className="flex">
         {list.map((column) => (
           <List key={column.id} title={column.title}>
-            {card.map((task) => (
-              <div
-                className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow"
-                key={task.id}
-              >
-                {task.title}
-                <PencilIcon className="w-3 h-3" />
-              </div>
-            ))}
+            {card.map(
+              (task) =>
+                task.parentId === column.id && (
+                  <div
+                    className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow"
+                    key={task.id}
+                  >
+                    {task.title}
+                    <PencilIcon className="w-3 h-3" />
+                  </div>
+                )
+            )}
 
             {newCard ? (
               <NewItem
-                createItem={handleCreateCard}
+                createItem={() => handleCreateCard(column.id)}
                 cancelItem={() => {
                   setNewCard(false);
                 }}
