@@ -22,7 +22,10 @@ const App = () => {
   const [listTitle, setListTitle] = useState<string>("");
   const [list, setList] = useState<List[]>([]);
 
-  const [newCard, setNewCard] = useState<boolean>(false);
+  const [newCard, setNewCard] = useState<{ id: number; show: boolean }>({
+    id: 0,
+    show: false,
+  });
   const [cardTitle, setCardTitle] = useState<string>("");
   const [card, setCard] = useState<Card[]>([]);
 
@@ -37,7 +40,7 @@ const App = () => {
       };
       setCard((prevCard) => [...prevCard, newCard]);
       setCardTitle("");
-      setNewCard(false);
+      setNewCard({ id: 0, show: false });
     }
   };
 
@@ -74,11 +77,11 @@ const App = () => {
                 )
             )}
 
-            {newCard ? (
+            {newCard.show && newCard.id === column.id ? (
               <NewItem
                 createItem={() => handleCreateCard(column.id)}
                 cancelItem={() => {
-                  setNewCard(false);
+                  setNewCard({ id: 0, show: false });
                 }}
                 onChange={(event: {
                   target: { value: React.SetStateAction<string> };
@@ -89,7 +92,7 @@ const App = () => {
                 <CreateItem
                   className="w-full px-3 py-1 text-sm text-gray-600 hover:bg-gray-500"
                   onClick={() => {
-                    setNewCard(true);
+                    setNewCard({ id: column.id, show: true });
                   }}
                 >
                   Add a card
