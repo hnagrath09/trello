@@ -61,7 +61,7 @@ const App = () => {
   return (
     <div className="flex-col w-screen h-screen bg-blue-600">
       <div className="w-screen h-10 mb-4 bg-blue-700"></div>
-      <div className="flex">
+      <div className="flex items-start">
         {list.map((column) => (
           <List key={column.id} title={column.title}>
             {card.map(
