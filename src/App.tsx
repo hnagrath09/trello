@@ -3,6 +3,7 @@ import NewItem from "./components/NewItem";
 import CreateItem from "./components/CreateItem";
 import List from "./components/List";
 import PencilIcon from "./components/icons/PencilIcon";
+import Modal from "./components/Modal";
 
 interface List {
   id: number;
@@ -28,6 +29,20 @@ const App = () => {
   });
   const [cardTitle, setCardTitle] = useState<string>("");
   const [card, setCard] = useState<Card[]>([]);
+
+  const [open, setOpen] = useState<boolean>(true);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    setOpen(false);
+  };
 
   const handleCreateCard = (listId: number) => {
     if (cardTitle) {
@@ -70,6 +85,7 @@ const App = () => {
                   <div
                     className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow cursor-pointer group"
                     key={task.id}
+                    onClick={showModal}
                   >
                     {task.title}
                     <PencilIcon className="hidden w-3 h-3 group-hover:block" />
@@ -101,6 +117,12 @@ const App = () => {
             )}
           </List>
         ))}
+        <Modal
+          show={open}
+          title="Sample Task"
+          handleCancel={hideModal}
+          handleSave={handleSave}
+        ></Modal>
         <div className="mx-2">
           {newList ? (
             <NewItem
