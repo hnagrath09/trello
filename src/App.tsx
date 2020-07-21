@@ -30,7 +30,7 @@ const App = () => {
   const [cardTitle, setCardTitle] = useState<string>("");
   const [card, setCard] = useState<Card[]>([]);
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   const showModal = () => {
     setOpen(true);
