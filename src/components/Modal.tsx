@@ -1,9 +1,15 @@
 import React, { useRef } from "react";
 import ReactDOM from "react-dom";
+
 import CloseIcon from "./icons/CloseIcon";
 import PaperClipIcon from "./icons/PaperClipIcon";
 import UserIcon from "./icons/UserIcon";
 import TagIcon from "./icons/TagIcon";
+import MenuAlt2Icon from "./icons/MenuAlt2Icon";
+import SpeakerPhoneIcon from "./icons/SpeakerPhoneIcon";
+import ShareIcon from "./icons/ShareIcon";
+import ArchiveIcon from "./icons/ArchiveIcon";
+import EyeIcon from "./icons/EyeIcon";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -53,17 +59,7 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
             <div className="flex">
               <div className="w-2/3 mx-5 ">
                 <div className="flex items-center mt-4">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5 mr-3"
-                  >
-                    <path d="M4 6h16M4 12h16M4 18h7"></path>
-                  </svg>
+                  <MenuAlt2Icon className="w-5 h-5 mr-3" />
                   <h2 className="font-semibold text-gray-600 ">Description</h2>
                 </div>
                 <div className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded ">
@@ -71,17 +67,7 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                 </div>
                 <div className="flex items-center justify-between mt-4 text-gray-700">
                   <div className="flex items-center">
-                    <svg
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="w-5 h-5 mr-3"
-                    >
-                      <path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-                    </svg>
+                    <SpeakerPhoneIcon className="w-5 h-5 mr-3" />
                     <h2 className="font-semibold text-gray-600 ">Activity</h2>
                   </div>
                   <div className="px-2 py-1 text-sm bg-gray-300 rounded-sm cursor-pointer">
@@ -202,46 +188,15 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                   Make Template
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                  </svg>
+                  <EyeIcon className="w-4 h-4 mr-1" />
                   Watch
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                  </svg>
+                  <ArchiveIcon className="w-4 h-4 mr-1" />
                   Archive
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-6 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
-                  </svg>
+                  <ShareIcon className="w-4 h-4 mr-1" />
                   Share
                 </div>
               </div>
