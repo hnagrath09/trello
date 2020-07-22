@@ -10,6 +10,11 @@ import SpeakerPhoneIcon from "./icons/SpeakerPhoneIcon";
 import ShareIcon from "./icons/ShareIcon";
 import ArchiveIcon from "./icons/ArchiveIcon";
 import EyeIcon from "./icons/EyeIcon";
+import CopyIcon from "./icons/CopyIcon";
+import ArrowRightIcon from "./icons/ArrowRightIcon";
+import PhotographIcon from "./icons/PhotographIcon";
+import ClockIcon from "./icons/ClockIcon";
+import ClipboardCheckIcon from "./icons/ClipboardCheckIcon";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -96,31 +101,11 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                   Labels
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                  </svg>
+                  <ClipboardCheckIcon className="w-4 h-4 mr-1" />
                   Checklist
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
+                  <ClockIcon className="w-4 h-4 mr-1" />
                   Due Date
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
@@ -128,17 +113,7 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                   Attachment
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-8 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
+                  <PhotographIcon className="w-4 h-4 mr-1" />
                   Cover
                 </div>
 
@@ -146,31 +121,11 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                   ACTIONS
                 </span>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
+                  <ArrowRightIcon className="w-4 h-4 mr-1" />
                   Move
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-                  <svg
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-4 h-4 mr-1"
-                  >
-                    <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                  </svg>
+                  <CopyIcon className="w-4 h-4 mr-1" />
                   Copy
                 </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
