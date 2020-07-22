@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import ReactDOM from "react-dom";
 
+import NewspaperIcon from "./icons/NewspaperIcon";
 import CloseIcon from "./icons/CloseIcon";
 import PaperClipIcon from "./icons/PaperClipIcon";
 import UserIcon from "./icons/UserIcon";
@@ -51,9 +52,10 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
         >
           <div className="w-2/5 bg-gray-200 rounded">
             <div className="flex items-center justify-between pb-4">
-              <h1 className="mt-4 ml-12 text-lg font-semibold text-gray-700">
+              <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
+                <NewspaperIcon className="w-5 h-5 mr-3" />
                 {title}
-              </h1>
+              </div>
               <div className="mt-3 mr-4 text-gray-700">
                 <CloseIcon
                   className="w-5 h-5 cursor-pointer"
