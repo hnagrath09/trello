@@ -22,9 +22,9 @@ interface Props
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  // children: React.ReactNode;
   show?: boolean;
   title?: string;
+  listTitle?: string;
   handleCancel: () => void;
   handleSave: () => void;
 }
@@ -34,7 +34,13 @@ modalContainer.id = "modal-container";
 modalContainer.style.position = "relative";
 document.body.appendChild(modalContainer);
 
-const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
+const Modal: React.FC<Props> = ({
+  show,
+  title,
+  listTitle,
+  handleCancel,
+  handleSave,
+}) => {
   const container = useRef<any>();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === container.current) {
@@ -51,7 +57,7 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
           ref={container}
         >
           <div className="w-2/5 bg-gray-200 rounded">
-            <div className="flex items-center justify-between pb-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
                 <NewspaperIcon className="w-5 h-5 mr-3" />
                 {title}
@@ -62,6 +68,12 @@ const Modal: React.FC<Props> = ({ show, title, handleCancel, handleSave }) => {
                   onClick={handleCancel}
                 />
               </div>
+            </div>
+            <div className="ml-2">
+              <span className="ml-12 text-sm text-gray-700">in list</span>
+              <span className="ml-1 text-sm text-gray-700 underline">
+                {listTitle}
+              </span>
             </div>
             <div className="flex">
               <div className="w-2/3 mx-5 ">

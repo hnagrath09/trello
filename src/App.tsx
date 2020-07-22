@@ -149,6 +149,13 @@ const App = () => {
       <Modal
         show={open}
         title={card.find((task) => task.id === activeCardId)?.title}
+        listTitle={
+          list.find(
+            (column) =>
+              column.id ===
+              card.find((task) => task.id === activeCardId)?.parentId
+          )?.title
+        }
         handleCancel={hideModal}
         handleSave={handleSave}
       />
