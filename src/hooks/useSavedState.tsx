@@ -5,7 +5,7 @@ const useSavedState = <T extends any>(
   defaultValue?: T
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
   const [state, setState] = useState<T>(
-    defaultValue || JSON.parse(localStorage.getItem(key) || "")
+    JSON.parse(localStorage.getItem(key) || "") || defaultValue
   );
 
   useEffect(() => {

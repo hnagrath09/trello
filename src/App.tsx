@@ -24,7 +24,6 @@ interface Card {
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
-  // const [list, setList] = useState<List[]>([]);
   const [list, setList] = useSavedState<List[]>("list", []);
 
   const [newCard, setNewCard] = useState<{ id: number; show: boolean }>({
@@ -32,7 +31,8 @@ const App = () => {
     show: false,
   });
   const [cardTitle, setCardTitle] = useState<string>("");
-  const [card, setCard] = useState<Card[]>([]);
+  const [card, setCard] = useSavedState<Card[]>("card", []);
+
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
 
   const [open, setOpen] = useState<boolean>(false);
