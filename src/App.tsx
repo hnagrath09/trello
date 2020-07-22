@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+import useSavedState from "./hooks/useSavedState";
 import NewItem from "./components/NewItem";
 import CreateItem from "./components/CreateItem";
 import List from "./components/List";
@@ -16,12 +18,14 @@ interface Card {
   parentId: number;
   order: number;
   title: string;
+  description: string;
 }
 
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
-  const [list, setList] = useState<List[]>([]);
+  // const [list, setList] = useState<List[]>([]);
+  const [list, setList] = useSavedState<List[]>("list", []);
 
   const [newCard, setNewCard] = useState<{ id: number; show: boolean }>({
     id: 0,
@@ -54,6 +58,7 @@ const App = () => {
         parentId: listId,
         order: list.length + 1,
         title: cardTitle,
+        description: "",
       };
       setCard((prevCard) => [...prevCard, newCard]);
       setCardTitle("");
