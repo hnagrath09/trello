@@ -77,14 +77,14 @@ const Modal: React.FC<Props> = ({
             </div>
             <div className="flex">
               <div className="w-2/3 mx-5 ">
-                <div className="flex items-center mt-4">
+                <div className="flex items-center mt-6">
                   <MenuAlt2Icon className="w-5 h-5 mr-3" />
                   <h2 className="font-semibold text-gray-600 ">Description</h2>
                 </div>
                 <div className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded ">
                   Add a more detailed description...
                 </div>
-                <div className="flex items-center justify-between mt-4 text-gray-700">
+                <div className="flex items-center justify-between mt-6 text-gray-700">
                   <div className="flex items-center">
                     <SpeakerPhoneIcon className="w-5 h-5 mr-3" />
                     <h2 className="font-semibold text-gray-600 ">Activity</h2>

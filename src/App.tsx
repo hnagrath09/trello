@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import useSavedState from "./hooks/useSavedState";
+import useLocalStorage from "./hooks/useLocalStorage";
 import NewItem from "./components/NewItem";
 import CreateItem from "./components/CreateItem";
 import List from "./components/List";
@@ -24,14 +24,16 @@ interface Card {
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
-  const [list, setList] = useSavedState<List[]>("list", []);
+  // const [list, setList] = useState<List[]>([]);
+  const [list, setList] = useLocalStorage("list", []);
 
   const [newCard, setNewCard] = useState<{ id: number; show: boolean }>({
     id: 0,
     show: false,
   });
   const [cardTitle, setCardTitle] = useState<string>("");
-  const [card, setCard] = useSavedState<Card[]>("card", []);
+  // const [card, setCard] = useState<Card[]>([]);
+  const [card, setCard] = useLocalStorage("cards", []);
 
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
 
@@ -60,7 +62,7 @@ const App = () => {
         title: cardTitle,
         description: "",
       };
-      setCard((prevCard) => [...prevCard, newCard]);
+      setCard((prevCard: Card[]) => [...prevCard, newCard]);
       setCardTitle("");
       setNewCard({ id: 0, show: false });
     }
@@ -75,7 +77,7 @@ const App = () => {
         title: listTitle,
       };
       setListTitle("");
-      setList((prevList) => [...prevList, newList]);
+      setList((prevList: List[]) => [...prevList, newList]);
       setNewList(false);
     }
   };
@@ -85,10 +87,10 @@ const App = () => {
       <div className="flex-col w-screen h-screen bg-blue-600">
         <div className="w-screen h-10 mb-4 bg-blue-700"></div>
         <div className="flex items-start">
-          {list.map((column) => (
+          {list.map((column: List) => (
             <List key={column.id} title={column.title}>
               {card.map(
-                (task) =>
+                (task: Card) =>
                   task.parentId === column.id && (
                     <div
                       className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow cursor-pointer group"
@@ -153,12 +155,12 @@ const App = () => {
       </div>
       <Modal
         show={open}
-        title={card.find((task) => task.id === activeCardId)?.title}
+        title={card.find((task: Card) => task.id === activeCardId)?.title}
         listTitle={
           list.find(
-            (column) =>
+            (column: List) =>
               column.id ===
-              card.find((task) => task.id === activeCardId)?.parentId
+              card.find((task: Card) => task.id === activeCardId)?.parentId
           )?.title
         }
         handleCancel={hideModal}
