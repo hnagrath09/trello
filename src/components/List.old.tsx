@@ -6,10 +6,11 @@ interface Props
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
+  children: React.ReactNode;
   title: string;
 }
 
-const List: React.FC<Props> = ({ title }) => {
+const List: React.FC<Props> = ({ children, title }) => {
   return (
     <div className="w-64 py-2 mx-2 bg-gray-300 rounded-sm ">
       <div className="flex items-center justify-between">
@@ -20,7 +21,7 @@ const List: React.FC<Props> = ({ title }) => {
           <HorizontalDotsIcon className="w-4 h-4" />
         </div>
       </div>
-      children
+      {children}
     </div>
   );
 };

@@ -2,12 +2,6 @@ import React from "react";
 import clsx from "clsx";
 import PlusIcon from "./icons/PlusIcon";
 
-interface List {
-  id: number;
-  order: number;
-  title: string;
-}
-
 interface Props
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
