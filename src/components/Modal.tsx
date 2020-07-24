@@ -122,7 +122,7 @@ const Modal: React.FC<Props> = ({
                   </div>
                 ) : description ? (
                   <div
-                    className="ml-8 text-sm text-gray-700"
+                    className="ml-8 text-sm text-gray-700 cursor-pointer"
                     onClick={() => {
                       setShowDescription(true);
                     }}

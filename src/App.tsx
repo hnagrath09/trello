@@ -6,6 +6,7 @@ import CreateItem from "./components/CreateItem";
 import List from "./components/List";
 import PencilIcon from "./components/icons/PencilIcon";
 import Modal from "./components/Modal";
+import MenuAlt2Icon from "./components/icons/MenuAlt2Icon";
 
 interface List {
   id: number;
@@ -103,14 +104,19 @@ const App = () => {
                 (task: Card) =>
                   task.parentId === column.id && (
                     <div
-                      className="flex items-center justify-between px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow cursor-pointer group"
+                      className="px-2 py-1 mx-2 mt-2 text-sm bg-gray-200 shadow cursor-pointer group"
                       key={task.id}
                       onClick={() => {
                         showModal(task.id);
                       }}
                     >
-                      {task.title}
-                      <PencilIcon className="hidden w-3 h-3 group-hover:block" />
+                      <div className="flex items-center justify-between">
+                        {task.title}
+                        <PencilIcon className="hidden w-3 h-3 group-hover:block" />
+                      </div>
+                      {task.description ? (
+                        <MenuAlt2Icon className="w-4 h-4 my-1" />
+                      ) : undefined}
                     </div>
                   )
               )}
