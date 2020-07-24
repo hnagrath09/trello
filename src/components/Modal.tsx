@@ -25,6 +25,9 @@ interface Props
   show?: boolean;
   title?: string;
   listTitle?: string;
+  cardDescription: any;
+  description?: string;
+  updateDescription: () => void;
   handleCancel: () => void;
   handleSave: () => void;
 }
@@ -38,6 +41,9 @@ const Modal: React.FC<Props> = ({
   show,
   title,
   listTitle,
+  cardDescription,
+  description,
+  updateDescription,
   handleCancel,
   handleSave,
 }) => {
@@ -49,6 +55,11 @@ const Modal: React.FC<Props> = ({
   };
 
   const [showDescription, setShowDescription] = useState<boolean>(false);
+
+  const saveDescription = () => {
+    setShowDescription(false);
+    updateDescription();
+  };
 
   return show ? (
     <React.Fragment>
@@ -90,8 +101,14 @@ const Modal: React.FC<Props> = ({
                       className="w-full h-24 px-3 py-2 text-sm text-gray-700 border-2 border-blue-600 rounded-sm resize-none focus:outline-none"
                       placeholder="Add a more detailed description..."
                       autoFocus
-                    />
-                    <button className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outline-none hover:bg-green-500 ">
+                      onChange={cardDescription}
+                    >
+                      {description}
+                    </textarea>
+                    <button
+                      className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outline-none hover:bg-green-500 "
+                      onClick={saveDescription}
+                    >
                       Save
                     </button>
                     <button
@@ -102,6 +119,15 @@ const Modal: React.FC<Props> = ({
                     >
                       Cancel
                     </button>
+                  </div>
+                ) : description ? (
+                  <div
+                    className="ml-8 text-sm text-gray-700"
+                    onClick={() => {
+                      setShowDescription(true);
+                    }}
+                  >
+                    {description}
                   </div>
                 ) : (
                   <div

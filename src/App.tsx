@@ -24,7 +24,6 @@ interface Card {
 const App = () => {
   const [newList, setNewList] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
-  // const [list, setList] = useState<List[]>([]);
   const [list, setList] = useLocalStorage("list", []);
 
   const [newCard, setNewCard] = useState<{ id: number; show: boolean }>({
@@ -32,11 +31,14 @@ const App = () => {
     show: false,
   });
   const [cardTitle, setCardTitle] = useState<string>("");
-  // const [card, setCard] = useState<Card[]>([]);
   const [card, setCard] = useLocalStorage("cards", []);
 
+  const [description, setDescription] = useState<string>("");
+
+  // To open Modal for the corresponfing card
   const [activeCardId, setActiveCardId] = useState<number | null>(null);
 
+  // To open or close Modal
   const [open, setOpen] = useState<boolean>(false);
 
   const showModal = (id: number) => {
@@ -80,6 +82,14 @@ const App = () => {
       setList((prevList: List[]) => [...prevList, newList]);
       setNewList(false);
     }
+  };
+
+  const handleDescription = () => {
+    setCard((prevCard: Card[]) =>
+      prevCard.map((task) =>
+        task.id === activeCardId ? { ...task, description } : task
+      )
+    );
   };
 
   return (
@@ -163,6 +173,13 @@ const App = () => {
               card.find((task: Card) => task.id === activeCardId)?.parentId
           )?.title
         }
+        cardDescription={(event: {
+          target: { value: React.SetStateAction<string> };
+        }) => setDescription(event.target.value)}
+        description={
+          card.find((task: Card) => task.id === activeCardId)?.description
+        }
+        updateDescription={handleDescription}
         handleCancel={hideModal}
         handleSave={handleSave}
       />
