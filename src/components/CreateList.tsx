@@ -3,7 +3,14 @@ import React, { useState } from "react";
 import PlusIcon from "./icons/PlusIcon";
 import FormList from "./FormList";
 
-const CreateList = () => {
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
+  getTitle?: any;
+}
+const CreateList: React.FC<Props> = ({ getTitle }) => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [listTitle, setListTitle] = useState<string>("");
 
@@ -17,6 +24,7 @@ const CreateList = () => {
           closeForm={() => {
             setIsCreating(false);
           }}
+          // saveForm={getTitle(listTitle)}
         />
       ) : (
         <button
