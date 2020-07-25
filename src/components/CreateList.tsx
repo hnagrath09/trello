@@ -12,19 +12,20 @@ interface Props
 }
 const CreateList: React.FC<Props> = ({ getTitle }) => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const [listTitle, setListTitle] = useState<string>("");
+
+  const handleSaveForm = (title: string) => {
+    getTitle(title);
+    setIsCreating(false);
+  };
 
   return (
     <div>
       {isCreating ? (
         <FormList
-          onChange={(event: {
-            target: { value: React.SetStateAction<string> };
-          }) => setListTitle(event.target.value)}
           closeForm={() => {
             setIsCreating(false);
           }}
-          // saveForm={getTitle(listTitle)}
+          saveForm={handleSaveForm}
         />
       ) : (
         <button

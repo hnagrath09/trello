@@ -13,16 +13,17 @@ interface List {
 const App = () => {
   const [list, setList] = useLocalStorage("list", []);
 
-  // const handleListTitle = (title: string) => {
-  //   if (title) {
-  //     const newList = {
-  //       id: Date.now(),
-  //       order: list.length + 1,
-  //       title: title,
-  //     };
-  //     setList((prevList: List[]) => [...prevList, newList]);
-  //   }
-  // };
+  const handleListTitle = (title: string) => {
+    console.log(title);
+    if (title) {
+      const newList = {
+        id: Date.now(),
+        order: list.length + 1,
+        title: title,
+      };
+      setList((prevList: List[]) => [...prevList, newList]);
+    }
+  };
 
   return (
     <div className="w-screen h-screen bg-blue-600">
@@ -31,9 +32,7 @@ const App = () => {
         {list.map((column: List) => (
           <List key={column.id} title={column.title} />
         ))}
-        <CreateList
-        // getTitle={handleListTitle}
-        />
+        <CreateList getTitle={handleListTitle} />
       </div>
     </div>
   );
