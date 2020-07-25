@@ -16,9 +16,14 @@ interface Props
     title: string;
     description: string;
   };
+  column: {
+    id: number;
+    order: number;
+    title: string;
+  };
 }
 
-const Card: React.FC<Props> = ({ card }) => {
+const Card: React.FC<Props> = ({ card, column }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const showModal = (id: number) => {
@@ -53,6 +58,7 @@ const Card: React.FC<Props> = ({ card }) => {
         handleCancel={hideModal}
         handleSave={handleSave}
         cardInfo={card}
+        listInfo={column}
       />
     </>
   );

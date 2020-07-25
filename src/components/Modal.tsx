@@ -30,6 +30,11 @@ interface Props
     title: string;
     description: string;
   };
+  listInfo: {
+    id: number;
+    order: number;
+    title: string;
+  };
   handleCancel: () => void;
   handleSave: () => void;
 }
@@ -45,6 +50,7 @@ const Modal: React.FC<Props> = ({
   handleCancel,
   handleSave,
   cardInfo,
+  listInfo,
 }) => {
   const container = useRef<any>();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -78,7 +84,7 @@ const Modal: React.FC<Props> = ({
             <div className="ml-2">
               <span className="ml-12 text-sm text-gray-700">in list</span>
               <span className="ml-1 text-sm text-gray-700 underline">
-                Sample List
+                {listInfo.title}
               </span>
             </div>
             <div className="flex">

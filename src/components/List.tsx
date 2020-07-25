@@ -49,7 +49,9 @@ const List: React.FC<Props> = ({ list }) => {
         </div>
       </div>
       {card.map((task: Card) =>
-        task.parentId === list.id ? <Card card={task} /> : undefined
+        task.parentId === list.id ? (
+          <Card card={task} column={list} />
+        ) : undefined
       )}
       <CreateCard getTitle={handleCardTitle} />
     </div>
