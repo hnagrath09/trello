@@ -26,7 +26,7 @@ interface Props
 const Card: React.FC<Props> = ({ card, column }) => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const showModal = (id: number) => {
+  const showModal = () => {
     setOpen(true);
   };
 
@@ -41,17 +41,15 @@ const Card: React.FC<Props> = ({ card, column }) => {
     <>
       <div
         className="px-2 py-1 mx-2 mt-2 text-sm bg-gray-100 shadow cursor-pointer group"
-        onClick={() => {
-          showModal(card.id);
-        }}
+        onClick={showModal}
       >
         <div className="flex items-center justify-between">
           {card.title}
           <PencilIcon className="hidden w-3 h-3 group-hover:block" />
-          {card.description ? (
-            <MenuAlt2Icon className="w-4 h-4 my-1" />
-          ) : undefined}
         </div>
+        {card.description ? (
+          <MenuAlt2Icon className="w-4 h-4 my-1" />
+        ) : undefined}
       </div>
       <Modal
         show={open}
