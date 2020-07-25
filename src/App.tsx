@@ -14,7 +14,6 @@ const App = () => {
   const [list, setList] = useLocalStorage("list", []);
 
   const handleListTitle = (title: string) => {
-    console.log(title);
     if (title) {
       const newList = {
         id: Date.now(),
@@ -30,7 +29,7 @@ const App = () => {
       <div className="w-screen h-10 mb-4 bg-blue-700" />
       <div className="flex items-start">
         {list.map((column: List) => (
-          <List key={column.id} title={column.title} />
+          <List key={column.id} list={column} />
         ))}
         <CreateList getTitle={handleListTitle} />
       </div>

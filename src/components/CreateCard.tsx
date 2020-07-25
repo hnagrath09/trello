@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-
 import PlusIcon from "./icons/PlusIcon";
-import FormList from "./FormList";
+import FormCard from "./FormCard";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -11,7 +10,7 @@ interface Props
   getTitle?: any;
 }
 
-const CreateList: React.FC<Props> = ({ getTitle }) => {
+const CreateCard: React.FC<Props> = ({ getTitle }) => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleSaveForm = (title: string) => {
@@ -22,25 +21,27 @@ const CreateList: React.FC<Props> = ({ getTitle }) => {
   return (
     <>
       {isCreating ? (
-        <FormList
+        <FormCard
           closeForm={() => {
             setIsCreating(false);
           }}
           saveForm={handleSaveForm}
         />
       ) : (
-        <button
-          className="flex items-center w-64 h-10 px-4 py-2 mx-2 text-sm text-white bg-blue-400 rounded-sm hover:bg-blue-300 focus:outline-none"
-          onClick={() => {
-            setIsCreating(true);
-          }}
-        >
-          <PlusIcon className="w-4 h-4 mr-2" />
-          Add a list
-        </button>
+        <div className="px-2 mt-3 mb-2">
+          <button
+            className="flex items-center w-full px-3 py-1 text-sm text-gray-600 rounded-sm hover:bg-gray-400 focus:outline-none"
+            onClick={() => {
+              setIsCreating(true);
+            }}
+          >
+            <PlusIcon className="w-4 h-4 mr-2" />
+            Add a card
+          </button>
+        </div>
       )}
     </>
   );
 };
 
-export default CreateList;
+export default CreateCard;
