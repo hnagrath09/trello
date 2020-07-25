@@ -1,8 +1,10 @@
 import React from "react";
-import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
-import useLocalStorage from "../hooks/useLocalStorage";
+
 import Card from "./Card";
 import CreateCard from "./CreateCard";
+
+import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -22,7 +24,6 @@ interface Card {
 
 const List: React.FC<Props> = ({ list }) => {
   const [card, setCard] = useLocalStorage("cards", []);
-  // const [activeCardId, setActiveCardId] = useState<number>();
 
   const handleCardTitle = (title: string) => {
     if (title) {
@@ -47,8 +48,8 @@ const List: React.FC<Props> = ({ list }) => {
           <HorizontalDotsIcon className="w-4 h-4" />
         </div>
       </div>
-      {card.map(
-        (task: Card) => task.parentId === list.id && <Card card={task} />
+      {card.map((task: Card) =>
+        task.parentId === list.id ? <Card card={task} /> : undefined
       )}
       <CreateCard getTitle={handleCardTitle} />
     </div>

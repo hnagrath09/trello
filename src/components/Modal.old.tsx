@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 import NewspaperIcon from "./icons/NewspaperIcon";
@@ -22,19 +22,16 @@ interface Props
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  show: boolean;
-  cardInfo: {
-    id: number;
-    parentId: number;
-    order: number;
-    title: string;
-    description: string;
-  };
+  show?: boolean;
+  title?: string;
+  listTitle?: string;
+  cardDescription?: any;
+  description?: string;
+  updateDescription?: () => void;
   handleCancel: () => void;
   handleSave: () => void;
 }
 
-// Using create portal to give Modal component access of entire DOM
 const modalContainer = document.createElement("div");
 modalContainer.id = "modal-container";
 modalContainer.style.position = "relative";
@@ -42,15 +39,26 @@ document.body.appendChild(modalContainer);
 
 const Modal: React.FC<Props> = ({
   show,
+  title,
+  listTitle,
+  cardDescription,
+  description,
+  updateDescription,
   handleCancel,
   handleSave,
-  cardInfo,
 }) => {
   const container = useRef<any>();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === container.current) {
       handleCancel();
     }
+  };
+
+  const [showDescription, setShowDescription] = useState<boolean>(false);
+
+  const saveDescription = () => {
+    setShowDescription(false);
+    // updateDescription();
   };
 
   return show ? (
@@ -66,7 +74,7 @@ const Modal: React.FC<Props> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
                 <NewspaperIcon className="w-5 h-5 mr-3" />
-                {cardInfo.title}
+                {title}
               </div>
               <div className="mt-3 mr-4 text-gray-700">
                 <CloseIcon
@@ -78,7 +86,7 @@ const Modal: React.FC<Props> = ({
             <div className="ml-2">
               <span className="ml-12 text-sm text-gray-700">in list</span>
               <span className="ml-1 text-sm text-gray-700 underline">
-                Sample List
+                {listTitle}
               </span>
             </div>
             <div className="flex">
@@ -87,13 +95,50 @@ const Modal: React.FC<Props> = ({
                   <MenuAlt2Icon className="w-5 h-5 mr-3" />
                   <h2 className="font-semibold text-gray-600 ">Description</h2>
                 </div>
-
-                {/* Card Description */}
-                <div className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded cursor-pointer ">
-                  Add a more detailed description...
-                </div>
-
-                {/* Activities */}
+                {showDescription ? (
+                  <div className="mt-4 ml-8">
+                    <textarea
+                      className="w-full h-24 px-3 py-2 text-sm text-gray-700 border-2 border-blue-600 rounded-sm resize-none focus:outline-none"
+                      placeholder="Add a more detailed description..."
+                      autoFocus
+                      onChange={cardDescription}
+                    >
+                      {description}
+                    </textarea>
+                    <button
+                      className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outline-none hover:bg-green-500 "
+                      onClick={saveDescription}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="px-2 py-1 ml-2 text-sm text-center text-white bg-red-500 rounded-sm focus:outline-none hover:bg-red-500 "
+                      onClick={() => {
+                        setShowDescription(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : description ? (
+                  <div
+                    className="ml-8 text-sm text-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setShowDescription(true);
+                    }}
+                  >
+                    {description}
+                  </div>
+                ) : (
+                  <div
+                    className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded cursor-pointer "
+                    onClick={() => {
+                      setShowDescription(true);
+                    }}
+                  >
+                    Add a more detailed description...
+                  </div>
+                )}
                 <div className="flex items-center justify-between mt-6 text-gray-700">
                   <div className="flex items-center">
                     <SpeakerPhoneIcon className="w-5 h-5 mr-3" />
@@ -103,8 +148,6 @@ const Modal: React.FC<Props> = ({
                     Hide Details
                   </div>
                 </div>
-
-                {/* Enter comment */}
                 <div className="flex items-center my-4">
                   <span className="px-1 py-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
                     HN
@@ -114,8 +157,6 @@ const Modal: React.FC<Props> = ({
                   </div>
                 </div>
               </div>
-
-              {/* Right side of modal */}
               <div className="w-1/4 pt-2">
                 <span className="mx-4 text-sm font-medium text-gray-600">
                   ADD TO CARD

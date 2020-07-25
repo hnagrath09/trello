@@ -5,7 +5,7 @@ import NewItem from "./components/NewItem";
 import CreateItem from "./components/CreateItem";
 import List from "./components/List.old";
 import PencilIcon from "./components/icons/PencilIcon";
-import Modal from "./components/Modal";
+import Modal from "./components/Modal.old";
 import MenuAlt2Icon from "./components/icons/MenuAlt2Icon";
 
 interface List {
