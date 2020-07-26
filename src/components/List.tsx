@@ -38,6 +38,14 @@ const List: React.FC<Props> = ({ list }) => {
     }
   };
 
+  const handleCardDescription = (description: string, cardId: number) => {
+    setCard((prevCard: Card[]) =>
+      prevCard.map((task) =>
+        task.id === cardId ? { ...task, description } : task
+      )
+    );
+  };
+
   return (
     <div className="w-64 pt-2 mx-2 bg-gray-300 rounded-sm ">
       <div className="flex items-center justify-between">
@@ -50,7 +58,7 @@ const List: React.FC<Props> = ({ list }) => {
       </div>
       {card.map((task: Card) =>
         task.parentId === list.id ? (
-          <Card card={task} column={list} />
+          <Card card={task} column={list} updateCard={handleCardDescription} />
         ) : undefined
       )}
       <CreateCard getTitle={handleCardTitle} />

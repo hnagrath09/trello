@@ -16,6 +16,7 @@ import ArrowRightIcon from "./icons/ArrowRightIcon";
 import PhotographIcon from "./icons/PhotographIcon";
 import ClockIcon from "./icons/ClockIcon";
 import ClipboardCheckIcon from "./icons/ClipboardCheckIcon";
+import useStateFromProp from "../hooks/useStateFromProp";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -36,7 +37,7 @@ interface Props
     title: string;
   };
   handleCancel: () => void;
-  handleSave: () => void;
+  updateCardInfo: any;
 }
 
 // Using create portal to give Modal component access of entire DOM
@@ -48,18 +49,21 @@ document.body.appendChild(modalContainer);
 const Modal: React.FC<Props> = ({
   show,
   handleCancel,
-  handleSave,
   cardInfo,
   listInfo,
+  updateCardInfo,
 }) => {
   const container = useRef<any>();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === container.current) {
+      setEditDescription(false);
       handleCancel();
     }
   };
 
-  const [editDescription, setEditDescription] = useState<boolean>(true);
+  const [editDescription, setEditDescription] = useState<boolean>(false);
+  const [description, setDescription] = useStateFromProp(cardInfo.description);
+
   return show ? (
     <React.Fragment>
       {ReactDOM.createPortal(
@@ -97,23 +101,49 @@ const Modal: React.FC<Props> = ({
 
                 {/* Card Description */}
                 {editDescription ? (
-                  <div className="mt-4 ml-8">
+                  <form
+                    className="mt-4 ml-8"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      updateCardInfo(description);
+                      setEditDescription(false);
+                    }}
+                  >
                     <textarea
                       className="w-full h-24 px-3 py-2 text-sm text-gray-700 border-2 border-blue-600 rounded-sm resize-none focus:outline-none"
                       placeholder="Add a more detailed description..."
                       autoFocus
-                    ></textarea>
-                    <button className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outlin e-none hover:bg-green-500 ">
+                      onChange={(event: {
+                        target: { value: React.SetStateAction<string> };
+                      }) => setDescription(event.target.value)}
+                    >
+                      {description}
+                    </textarea>
+                    <button
+                      className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outline-none hover:bg-green-500 "
+                      type="submit"
+                    >
                       Save
                     </button>
                     <button
                       className="px-2 py-1 ml-2 text-sm text-center text-white bg-red-500 rounded-sm focus:outline-none hover:bg-red-500 "
+                      type="reset"
                       onClick={() => {
                         setEditDescription(false);
+                        setDescription(cardInfo.description);
                       }}
                     >
                       Cancel
                     </button>
+                  </form>
+                ) : cardInfo.description ? (
+                  <div
+                    className="ml-8 text-sm text-gray-800 cursor-pointer"
+                    onClick={() => {
+                      setEditDescription(true);
+                    }}
+                  >
+                    {cardInfo.description}
                   </div>
                 ) : (
                   <div
@@ -150,9 +180,9 @@ const Modal: React.FC<Props> = ({
 
               {/* Right side of modal */}
               <div className="w-1/4 pt-2">
-                <span className="mx-4 text-sm font-medium text-gray-600">
+                <div className="mx-4 mb-2 text-sm font-medium text-gray-600">
                   ADD TO CARD
-                </span>
+                </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
                   <UserIcon className="w-4 h-4 mr-1" />
                   Members
@@ -178,9 +208,9 @@ const Modal: React.FC<Props> = ({
                   Cover
                 </div>
 
-                <span className="mx-4 text-sm font-medium text-gray-600">
+                <div className="mx-4 mb-2 text-sm font-medium text-gray-600">
                   ACTIONS
-                </span>
+                </div>
                 <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
                   <ArrowRightIcon className="w-4 h-4 mr-1" />
                   Move

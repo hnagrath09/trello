@@ -4,26 +4,29 @@ import Modal from "./Modal";
 import PencilIcon from "./icons/PencilIcon";
 import MenuAlt2Icon from "./icons/MenuAlt2Icon";
 
+interface card {
+  id: number;
+  parentId: number;
+  order: number;
+  title: string;
+  description: string;
+}
+
 interface Props
   extends React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
-  card: {
-    id: number;
-    parentId: number;
-    order: number;
-    title: string;
-    description: string;
-  };
+  card: card;
   column: {
     id: number;
     order: number;
     title: string;
   };
+  updateCard: any;
 }
 
-const Card: React.FC<Props> = ({ card, column }) => {
+const Card: React.FC<Props> = ({ card, column, updateCard }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const showModal = () => {
@@ -34,9 +37,11 @@ const Card: React.FC<Props> = ({ card, column }) => {
     setOpen(false);
   };
 
-  const handleSave = () => {
-    setOpen(false);
+  const handleCardChanges = (description: string) => {
+    console.log(description);
+    updateCard(description, card.id);
   };
+
   return (
     <>
       <div
@@ -54,9 +59,9 @@ const Card: React.FC<Props> = ({ card, column }) => {
       <Modal
         show={open}
         handleCancel={hideModal}
-        handleSave={handleSave}
         cardInfo={card}
         listInfo={column}
+        updateCardInfo={handleCardChanges}
       />
     </>
   );
