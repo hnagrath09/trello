@@ -23,10 +23,16 @@ interface Props
     order: number;
     title: string;
   };
-  updateCard: any;
+  updateCardTit: any;
+  updateCardDes: any;
 }
 
-const Card: React.FC<Props> = ({ card, column, updateCard }) => {
+const Card: React.FC<Props> = ({
+  card,
+  column,
+  updateCardTit,
+  updateCardDes,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const showModal = () => {
@@ -37,9 +43,12 @@ const Card: React.FC<Props> = ({ card, column, updateCard }) => {
     setOpen(false);
   };
 
-  const handleCardChanges = (description: string) => {
-    console.log(description);
-    updateCard(description, card.id);
+  const handleCardDescription = (description: string) => {
+    updateCardDes(description, card.id);
+  };
+
+  const handleCardTitle = (title: string) => {
+    updateCardTit(title, card.id);
   };
 
   return (
@@ -61,7 +70,8 @@ const Card: React.FC<Props> = ({ card, column, updateCard }) => {
         handleCancel={hideModal}
         cardInfo={card}
         listInfo={column}
-        updateCardInfo={handleCardChanges}
+        updateCardDescription={handleCardDescription}
+        updateCardTitle={handleCardTitle}
       />
     </>
   );

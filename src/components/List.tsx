@@ -25,7 +25,7 @@ interface Card {
 const List: React.FC<Props> = ({ list }) => {
   const [card, setCard] = useLocalStorage("cards", []);
 
-  const handleCardTitle = (title: string) => {
+  const handleCreateCard = (title: string) => {
     if (title) {
       const newList = {
         id: Date.now(),
@@ -46,6 +46,12 @@ const List: React.FC<Props> = ({ list }) => {
     );
   };
 
+  const handleCardTitle = (title: string, cardId: number) => {
+    setCard((prevCard: Card[]) =>
+      prevCard.map((task) => (task.id === cardId ? { ...task, title } : task))
+    );
+  };
+
   return (
     <div className="w-64 pt-2 mx-2 bg-gray-300 rounded-sm ">
       <div className="flex items-center justify-between">
@@ -58,10 +64,16 @@ const List: React.FC<Props> = ({ list }) => {
       </div>
       {card.map((task: Card) =>
         task.parentId === list.id ? (
-          <Card card={task} column={list} updateCard={handleCardDescription} />
+          <Card
+            key={task.id}
+            card={task}
+            column={list}
+            updateCardDes={handleCardDescription}
+            updateCardTit={handleCardTitle}
+          />
         ) : undefined
       )}
-      <CreateCard getTitle={handleCardTitle} />
+      <CreateCard getTitle={handleCreateCard} />
     </div>
   );
 };

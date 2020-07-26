@@ -37,7 +37,8 @@ interface Props
     title: string;
   };
   handleCancel: () => void;
-  updateCardInfo: any;
+  updateCardTitle: any;
+  updateCardDescription: any;
 }
 
 // Using create portal to give Modal component access of entire DOM
@@ -51,7 +52,8 @@ const Modal: React.FC<Props> = ({
   handleCancel,
   cardInfo,
   listInfo,
-  updateCardInfo,
+  updateCardTitle,
+  updateCardDescription,
 }) => {
   const container = useRef<any>();
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -60,6 +62,8 @@ const Modal: React.FC<Props> = ({
       handleCancel();
     }
   };
+  const [editCardTitle, setEditCardTitle] = useState<boolean>(false);
+  const [cardTitle, setCardTitle] = useStateFromProp(cardInfo.title);
 
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useStateFromProp(cardInfo.description);
@@ -77,7 +81,33 @@ const Modal: React.FC<Props> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
                 <NewspaperIcon className="w-5 h-5 mr-3" />
-                {cardInfo.title}
+                {editCardTitle ? (
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      updateCardTitle(cardTitle);
+                      setEditCardTitle(false);
+                    }}
+                  >
+                    <input
+                      className="pl-1 -ml-1 font-semibold text-gray-700 border-2 border-blue-600 rounded-sm focus:outline-none"
+                      autoFocus
+                      onChange={(event: {
+                        target: { value: React.SetStateAction<string> };
+                      }) => setCardTitle(event.target.value)}
+                      defaultValue={cardTitle}
+                    ></input>
+                  </form>
+                ) : (
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setEditCardTitle(true);
+                    }}
+                  >
+                    {cardInfo.title}
+                  </div>
+                )}
               </div>
               <div
                 className="p-2 mt-3 mr-4 text-gray-700 rounded-full cursor-pointer hover:bg-gray-400"
@@ -94,18 +124,17 @@ const Modal: React.FC<Props> = ({
             </div>
             <div className="flex">
               <div className="w-2/3 mx-5 ">
+                {/* Card Description */}
                 <div className="flex items-center mt-6">
                   <MenuAlt2Icon className="w-5 h-5 mr-3" />
                   <h2 className="font-semibold text-gray-600 ">Description</h2>
                 </div>
-
-                {/* Card Description */}
                 {editDescription ? (
                   <form
                     className="mt-4 ml-8"
                     onSubmit={(event) => {
                       event.preventDefault();
-                      updateCardInfo(description);
+                      updateCardDescription(description);
                       setEditDescription(false);
                     }}
                   >
@@ -113,12 +142,12 @@ const Modal: React.FC<Props> = ({
                       className="w-full h-24 px-3 py-2 text-sm text-gray-700 border-2 border-blue-600 rounded-sm resize-none focus:outline-none"
                       placeholder="Add a more detailed description..."
                       autoFocus
+                      onFocus={(event) => event.target.select()}
                       onChange={(event: {
                         target: { value: React.SetStateAction<string> };
                       }) => setDescription(event.target.value)}
-                    >
-                      {description}
-                    </textarea>
+                      defaultValue={description}
+                    />
                     <button
                       className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outline-none hover:bg-green-500 "
                       type="submit"
