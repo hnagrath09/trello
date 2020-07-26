@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 import NewspaperIcon from "./icons/NewspaperIcon";
@@ -59,6 +59,7 @@ const Modal: React.FC<Props> = ({
     }
   };
 
+  const [editDescription, setEditDescription] = useState<boolean>(true);
   return show ? (
     <React.Fragment>
       {ReactDOM.createPortal(
@@ -74,11 +75,11 @@ const Modal: React.FC<Props> = ({
                 <NewspaperIcon className="w-5 h-5 mr-3" />
                 {cardInfo.title}
               </div>
-              <div className="mt-3 mr-4 text-gray-700">
-                <CloseIcon
-                  className="w-5 h-5 cursor-pointer"
-                  onClick={handleCancel}
-                />
+              <div
+                className="p-2 mt-3 mr-4 text-gray-700 rounded-full cursor-pointer hover:bg-gray-400"
+                onClick={handleCancel}
+              >
+                <CloseIcon className="w-5 h-5" />
               </div>
             </div>
             <div className="ml-2">
@@ -95,9 +96,35 @@ const Modal: React.FC<Props> = ({
                 </div>
 
                 {/* Card Description */}
-                <div className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded cursor-pointer ">
-                  Add a more detailed description...
-                </div>
+                {editDescription ? (
+                  <div className="mt-4 ml-8">
+                    <textarea
+                      className="w-full h-24 px-3 py-2 text-sm text-gray-700 border-2 border-blue-600 rounded-sm resize-none focus:outline-none"
+                      placeholder="Add a more detailed description..."
+                      autoFocus
+                    ></textarea>
+                    <button className="px-2 py-1 text-sm text-center text-white bg-green-600 rounded-sm focus:outlin e-none hover:bg-green-500 ">
+                      Save
+                    </button>
+                    <button
+                      className="px-2 py-1 ml-2 text-sm text-center text-white bg-red-500 rounded-sm focus:outline-none hover:bg-red-500 "
+                      onClick={() => {
+                        setEditDescription(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="h-16 px-3 py-2 mt-4 ml-8 text-sm text-gray-700 bg-gray-300 rounded cursor-pointer "
+                    onClick={() => {
+                      setEditDescription(true);
+                    }}
+                  >
+                    Add a more detailed description...
+                  </div>
+                )}
 
                 {/* Activities */}
                 <div className="flex items-center justify-between mt-6 text-gray-700">
