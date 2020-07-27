@@ -16,7 +16,7 @@ interface List {
 const App = () => {
   const [list, setList] = useLocalStorage("list", []);
 
-  const handleListTitle = (title: string) => {
+  const handleCreateList = (title: string) => {
     if (title) {
       const newList = {
         id: Date.now(),
@@ -25,6 +25,14 @@ const App = () => {
       };
       setList((prevList: List[]) => [...prevList, newList]);
     }
+  };
+
+  const handleListTitle = (title: string, listId: number) => {
+    setList((prevList: List[]) =>
+      prevList.map((column) =>
+        column.id === listId ? { ...column, title } : column
+      )
+    );
   };
 
   return (
@@ -44,9 +52,9 @@ const App = () => {
       {/* Board starting */}
       <div className="flex items-start">
         {list.map((column: List) => (
-          <List key={column.id} list={column} />
+          <List key={column.id} list={column} updateTitle={handleListTitle} />
         ))}
-        <CreateList getTitle={handleListTitle} />
+        <CreateList getTitle={handleCreateList} />
       </div>
       {/* Board ending */}
     </div>
