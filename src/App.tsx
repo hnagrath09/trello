@@ -90,6 +90,7 @@ const App = () => {
                   updateTitle={handleListTitle}
                 />
               ))}
+              {provided.placeholder}
               <CreateList getTitle={handleCreateList} />
             </div>
           )}
