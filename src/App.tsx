@@ -1,4 +1,5 @@
 import React from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 
@@ -20,7 +21,7 @@ const App = () => {
     if (title) {
       const newList = {
         id: Date.now(),
-        order: list.length + 1,
+        order: list.length,
         title: title,
       };
       setList((prevList: List[]) => [...prevList, newList]);
@@ -33,6 +34,30 @@ const App = () => {
         column.id === listId ? { ...column, title } : column
       )
     );
+  };
+
+  const handleDrag = (result: any) => {
+    const { destination, source, type } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    if (type === "list") {
+      const newList = [...list];
+      const [item] = newList.slice(source.index, source.index + 1);
+      newList.splice(source.index, 1);
+      newList.splice(destination.index, 0, item);
+      newList.map((column, index) => (column.order = index));
+      setList(newList);
+    }
   };
 
   return (
@@ -50,12 +75,26 @@ const App = () => {
       {/* NavBar ending */}
 
       {/* Board starting */}
-      <div className="flex items-start">
-        {list.map((column: List) => (
-          <List key={column.id} list={column} updateTitle={handleListTitle} />
-        ))}
-        <CreateList getTitle={handleCreateList} />
-      </div>
+      <DragDropContext onDragEnd={handleDrag}>
+        <Droppable droppableId="all-columns" direction="horizontal" type="list">
+          {(provided) => (
+            <div
+              className="flex items-start"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {list.map((column: List) => (
+                <List
+                  key={column.id}
+                  list={column}
+                  updateTitle={handleListTitle}
+                />
+              ))}
+              <CreateList getTitle={handleCreateList} />
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       {/* Board ending */}
     </div>
   );
