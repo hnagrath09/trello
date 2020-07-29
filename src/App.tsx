@@ -1,10 +1,10 @@
 import React from "react";
+import { useQuery, useMutation, queryCache } from "react-query";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
-import useLocalStorage from "./hooks/useLocalStorage";
 
 import List from "./components/List";
 import CreateList from "./components/CreateList";
+import { fetchLists, createList } from "./queries/listQueries";
 
 import HomeIcon from "./components/icons/HomeIcon";
 
@@ -15,25 +15,27 @@ interface List {
 }
 
 const App = () => {
-  const [list, setList] = useLocalStorage("list", []);
+  const { isLoading, data: list, error } = useQuery("lists", fetchLists);
+  const [createListMutation, { isLoading: creatingList }] = useMutation(
+    createList,
+    {
+      onSuccess: (createdList) => {
+        queryCache.setQueryData(
+          "lists",
+          list ? [...list, createdList] : [createdList]
+        );
+      },
+    }
+  );
 
   const handleCreateList = (title: string) => {
     if (title) {
-      const newList = {
-        id: Date.now(),
-        order: list.length,
-        title: title,
-      };
-      setList((prevList: List[]) => [...prevList, newList]);
+      createListMutation({ title, order: list?.length ?? 0 });
     }
   };
 
-  const handleListTitle = (title: string, listId: number) => {
-    setList((prevList: List[]) =>
-      prevList.map((column) =>
-        column.id === listId ? { ...column, title } : column
-      )
-    );
+  const handleListTitle = () => {
+    //TO DO:
   };
 
   const handleDrag = (result: any) => {
@@ -51,12 +53,6 @@ const App = () => {
     }
 
     if (type === "list") {
-      const newList = [...list];
-      const [item] = newList.slice(source.index, source.index + 1);
-      newList.splice(source.index, 1);
-      newList.splice(destination.index, 0, item);
-      newList.map((column, index) => (column.order = index));
-      setList(newList);
       return;
     }
   };
@@ -84,13 +80,19 @@ const App = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {list.map((column: List) => (
-                <List
-                  key={column.id}
-                  list={column}
-                  updateTitle={handleListTitle}
-                />
-              ))}
+              {isLoading ? (
+                <div className="font-semibold text-white">Loading...</div>
+              ) : error ? (
+                <div>{error}</div>
+              ) : (
+                list?.map((column: List) => (
+                  <List
+                    key={column.id}
+                    list={column}
+                    updateTitle={handleListTitle}
+                  />
+                ))
+              )}
               {provided.placeholder}
               <CreateList getTitle={handleCreateList} />
             </div>
