@@ -57,11 +57,12 @@ const App = () => {
       newList.splice(destination.index, 0, item);
       newList.map((column, index) => (column.order = index));
       setList(newList);
+      return;
     }
   };
 
   return (
-    <div className="w-screen h-screen bg-blue-600">
+    <div className="w-screen h-screen bg-blue-600 ">
       {/* NavBar starting */}
       <div className="flex items-center justify-between w-screen h-10 mb-4 bg-blue-700">
         <div className="p-2 ml-2 text-white bg-blue-400 rounded cursor-pointer">
@@ -79,7 +80,7 @@ const App = () => {
         <Droppable droppableId="all-columns" direction="horizontal" type="list">
           {(provided) => (
             <div
-              className="flex items-start"
+              className="flex items-start "
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
