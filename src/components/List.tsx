@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import { useQuery, useMutation, queryCache } from "react-query";
 
 import Card from "./Card";
 import CreateCard from "./CreateCard";
+import { fetchCards, createCard } from "../queries/cardQueries";
 
-import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
-import useLocalStorage from "../hooks/useLocalStorage";
 import useStateFromProp from "../hooks/useStateFromProp";
+import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
+
+interface Card {
+  id: number;
+  list: { id: number; title: string; order: number };
+  order: number;
+  title: string;
+  description: string;
+  parentId: number; // Remove this
+}
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -17,45 +27,37 @@ interface Props
   updateTitle: any;
 }
 
-interface Card {
-  id: number;
-  parentId: number;
-  order: number;
-  title: string;
-  description: string;
-}
-
 const List: React.FC<Props> = ({ list, updateTitle }) => {
-  const [card, setCard] = useLocalStorage("cards", []);
+  const { data: card } = useQuery("cards", fetchCards);
+  const [addCard] = useMutation(createCard, {
+    onSuccess: (createdCard) => {
+      queryCache.setQueryData(
+        "cards",
+        card ? [...card, createdCard] : createdCard
+      );
+    },
+  });
 
   const [editListTitle, setEditListTitle] = useState<boolean>(false);
   const [listTitle, setListTitle] = useStateFromProp(list.title);
 
   const handleCreateCard = (title: string) => {
     if (title) {
-      const newList = {
-        id: Date.now(),
-        parentId: list.id,
-        order: card.length,
-        title: title,
+      addCard({
+        title,
         description: "",
-      };
-      setCard((prevCard: Card[]) => [...prevCard, newList]);
+        order: card?.length + 1 ?? 0,
+        listId: list.id,
+      });
     }
   };
 
-  const handleCardDescription = (description: string, cardId: number) => {
-    setCard((prevCard: Card[]) =>
-      prevCard.map((task) =>
-        task.id === cardId ? { ...task, description } : task
-      )
-    );
+  const handleCardDescription = () => {
+    // To Do: function to add or edit card description
   };
 
-  const handleCardTitle = (title: string, cardId: number) => {
-    setCard((prevCard: Card[]) =>
-      prevCard.map((task) => (task.id === cardId ? { ...task, title } : task))
-    );
+  const handleCardTitle = () => {
+    //To Do: function to edit card title
   };
 
   return (
@@ -106,8 +108,8 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
           <Droppable droppableId={list.id.toString()}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {card.map((task: Card) =>
-                  task.parentId === list.id ? (
+                {card?.map((task: Card) =>
+                  task.list.id === list.id ? (
                     <Card
                       key={task.id}
                       card={task}
