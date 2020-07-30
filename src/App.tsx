@@ -79,33 +79,39 @@ const App = () => {
       {/* NavBar ending */}
 
       {/* Board starting */}
-      <DragDropContext onDragEnd={handleDrag}>
-        <Droppable droppableId="all-columns" direction="horizontal" type="list">
-          {(provided) => (
-            <div
-              className="flex items-start "
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {isLoading ? (
-                <div className="font-semibold text-white">Loading...</div>
-              ) : error ? (
-                <div>{error}</div>
-              ) : (
-                list?.map((column: List) => (
+      {isLoading ? (
+        <div className="w-20 mx-auto my-64 font-semibold text-white">
+          Loading...
+        </div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
+        <DragDropContext onDragEnd={handleDrag}>
+          <Droppable
+            droppableId="all-columns"
+            direction="horizontal"
+            type="list"
+          >
+            {(provided) => (
+              <div
+                className="flex items-start "
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {list?.map((column: List) => (
                   <List
                     key={column.id}
                     list={column}
                     updateTitle={handleListTitle}
                   />
-                ))
-              )}
-              {provided.placeholder}
-              <CreateList getTitle={handleCreateList} />
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                ))}
+                {provided.placeholder}
+                <CreateList getTitle={handleCreateList} />
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
       {/* Board ending */}
     </div>
   );
