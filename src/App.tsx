@@ -4,7 +4,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import List from "./components/List";
 import CreateList from "./components/CreateList";
-import { fetchLists, createList } from "./queries/listQueries";
+import { fetchLists, createList, updateList } from "./queries/listQueries";
 
 import HomeIcon from "./components/icons/HomeIcon";
 
@@ -16,26 +16,33 @@ interface List {
 
 const App = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
-  const [createListMutation, { isLoading: creatingList }] = useMutation(
-    createList,
-    {
-      onSuccess: (createdList) => {
-        queryCache.setQueryData(
-          "lists",
-          list ? [...list, createdList] : [createdList]
-        );
-      },
-    }
-  );
+  const [addList] = useMutation(createList, {
+    onSuccess: (createdList) => {
+      queryCache.setQueryData(
+        "lists",
+        list ? [...list, createdList] : [createdList]
+      );
+    },
+  });
+  const [editList] = useMutation(updateList, {
+    onSuccess: (updatedList) => {
+      queryCache.setQueryData(
+        "lists",
+        list?.map((column) =>
+          column.id === updatedList.id ? updatedList : column
+        )
+      );
+    },
+  });
 
   const handleCreateList = (title: string) => {
     if (title) {
-      createListMutation({ title, order: list?.length ?? 0 });
+      addList({ title, order: list?.length ?? 0 });
     }
   };
 
-  const handleListTitle = () => {
-    //TO DO:
+  const handleListTitle = (title: string, listId: number) => {
+    editList({ id: listId, title });
   };
 
   const handleDrag = (result: any) => {
