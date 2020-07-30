@@ -34,11 +34,29 @@ export const updateCard = async ({
   id,
   title,
   order,
+  description,
+  listId,
 }: {
   id: number;
   title?: string;
   order?: number;
+  description?: string;
+  listId?: number;
 }) => {
-  const { data } = await client.put(`/lists/${id}`, { title, order });
-  return data;
+  if (listId) {
+    const { data } = await client.put(`/cards/${id}`, {
+      title,
+      order,
+      description,
+      list: { id: listId },
+    });
+    return data;
+  } else {
+    const { data } = await client.put(`/cards/${id}`, {
+      title,
+      order,
+      description,
+    });
+    return data;
+  }
 };
