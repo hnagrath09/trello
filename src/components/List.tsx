@@ -63,12 +63,11 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
   };
 
   const handleCardDescription = (description: string, cardId: number) => {
-    console.log(cardId, description);
     editCard({ id: cardId, description });
   };
 
-  const handleCardTitle = () => {
-    //To Do: function to edit card title
+  const handleCardTitle = (title: string, cardId: number) => {
+    editCard({ id: cardId, title });
   };
 
   return (
