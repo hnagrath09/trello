@@ -28,9 +28,14 @@ export const createList = async ({
 };
 
 export const updateList = async ({
+  id,
   title,
   order,
 }: {
-  title: string;
-  order: number;
-}) => {};
+  id: number;
+  title?: string;
+  order?: number;
+}) => {
+  const { data } = await client.put(`/lists/${id}`, { title, order });
+  return data;
+};
