@@ -4,7 +4,7 @@ import { useQuery, useMutation, queryCache } from "react-query";
 
 import Card from "./Card";
 import CreateCard from "./CreateCard";
-import { fetchCards, createCard } from "../queries/cardQueries";
+import { fetchCards, createCard, updateCard } from "../queries/cardQueries";
 
 import useStateFromProp from "../hooks/useStateFromProp";
 import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
@@ -37,6 +37,16 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
       );
     },
   });
+  const [editCard] = useMutation(updateCard, {
+    onSuccess: (updatedCard) => {
+      queryCache.setQueryData(
+        "cards",
+        card?.map((task: Card) =>
+          task.id === updatedCard.id ? updatedCard : task
+        )
+      );
+    },
+  });
 
   const [editListTitle, setEditListTitle] = useState<boolean>(false);
   const [listTitle, setListTitle] = useStateFromProp(list.title);
@@ -52,8 +62,9 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
     }
   };
 
-  const handleCardDescription = () => {
-    // To Do: function to add or edit card description
+  const handleCardDescription = (description: string, cardId: number) => {
+    console.log(cardId, description);
+    editCard({ id: cardId, description });
   };
 
   const handleCardTitle = () => {
