@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery, useMutation, queryCache } from "react-query";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { orderBy } from "lodash-es";
 
 import List from "./components/List";
 import CreateList from "./components/CreateList";
@@ -46,7 +47,7 @@ const App = () => {
   };
 
   const handleDrag = (result: any) => {
-    const { destination, source, type } = result;
+    const { destination, source, type, draggableId } = result;
 
     if (!destination) {
       return;
@@ -60,7 +61,22 @@ const App = () => {
     }
 
     if (type === "list") {
-      return;
+      if (source.index - destination.index < 0) {
+        for (let i = source.index + 1; i <= destination.index; i++) {
+          editList({
+            id: orderBy(list, ["order"], ["asc"])[i].id,
+            order: orderBy(list, ["order"], ["asc"])[i - 1].order,
+          });
+        }
+      } else if (source.index - destination.index > 0) {
+        for (let i = destination.index; i < source.index; i++) {
+          editList({
+            id: orderBy(list, ["order"], ["asc"])[i].id,
+            order: orderBy(list, ["order"], ["asc"])[i + 1].order,
+          });
+        }
+      }
+      editList({ id: draggableId, order: destination.index });
     }
   };
 
@@ -98,7 +114,7 @@ const App = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {list?.map((column: List) => (
+                {orderBy(list, ["order"], ["asc"])?.map((column: List) => (
                   <List
                     key={column.id}
                     list={column}
