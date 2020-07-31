@@ -1,7 +1,6 @@
-import React from "react";
-import { useQuery, useMutation, queryCache } from "react-query";
+import React, { useMemo, useCallback } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { orderBy } from "lodash-es";
+import { useQuery, useMutation, queryCache } from "react-query";
 
 import List from "./components/List";
 import CreateList from "./components/CreateList";
@@ -17,6 +16,7 @@ interface List {
 
 const App = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
+
   const [addList] = useMutation(createList, {
     onSuccess: (createdList) => {
       queryCache.setQueryData(
@@ -25,6 +25,7 @@ const App = () => {
       );
     },
   });
+
   const [editList] = useMutation(updateList, {
     onSuccess: (updatedList) => {
       queryCache.setQueryData(
@@ -36,18 +37,24 @@ const App = () => {
     },
   });
 
-  const handleCreateList = (title: string) => {
-    if (title) {
-      addList({ title, order: list?.length ?? 0 });
-    }
-  };
+  const handleCreateList = useCallback(
+    (title: string) => {
+      if (title) {
+        addList({ title, order: list?.length ?? 0 });
+      }
+    },
+    [addList, list]
+  );
 
-  const handleListTitle = (title: string, listId: number) => {
-    editList({ id: listId, title });
-  };
+  const handleListTitle = useCallback(
+    (title: string, listId: number) => {
+      editList({ title, id: listId });
+    },
+    [editList]
+  );
 
   const handleDrag = (result: any) => {
-    const { destination, source, type, draggableId } = result;
+    const { destination, source, type } = result;
 
     if (!destination) {
       return;
@@ -61,24 +68,48 @@ const App = () => {
     }
 
     if (type === "list") {
-      if (source.index - destination.index < 0) {
-        for (let i = source.index + 1; i <= destination.index; i++) {
-          editList({
-            id: orderBy(list, ["order"], ["asc"])[i].id,
-            order: orderBy(list, ["order"], ["asc"])[i - 1].order,
-          });
-        }
-      } else if (source.index - destination.index > 0) {
-        for (let i = destination.index; i < source.index; i++) {
-          editList({
-            id: orderBy(list, ["order"], ["asc"])[i].id,
-            order: orderBy(list, ["order"], ["asc"])[i + 1].order,
-          });
-        }
-      }
-      editList({ id: draggableId, order: destination.index });
+      console.log(type);
+      // const newList = [...list];
+      // const [item] = newList.slice(source.index, source.index + 1);
+      // newList.splice(source.index, 1);
+      // newList.splice(destination.index, 0, item);
+      // newList.map((column, index) => (column.order = index));
+      // setList(newList);
+      // return;
     }
   };
+
+  const Board = useMemo(() => {
+    return isLoading ? (
+      <div className="max-w-xs mx-auto my-64 text-lg font-semibold text-white">
+        Loading...
+      </div>
+    ) : error ? (
+      <div>{error.message}</div>
+    ) : (
+      <DragDropContext onDragEnd={handleDrag}>
+        <Droppable droppableId="all-columns" direction="horizontal" type="list">
+          {(provided) => (
+            <div
+              className="flex items-start "
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {list?.map((column: List) => (
+                <List
+                  key={column.id}
+                  list={column}
+                  updateTitle={handleListTitle}
+                />
+              ))}
+              {provided.placeholder}
+              <CreateList getTitle={handleCreateList} />
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
+  }, [isLoading, error, handleCreateList, handleListTitle, list]);
 
   return (
     <div className="w-screen h-screen bg-blue-600 ">
@@ -95,39 +126,7 @@ const App = () => {
       {/* NavBar ending */}
 
       {/* Board starting */}
-      {isLoading ? (
-        <div className="w-20 mx-auto my-64 font-semibold text-white">
-          Loading...
-        </div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <DragDropContext onDragEnd={handleDrag}>
-          <Droppable
-            droppableId="all-columns"
-            direction="horizontal"
-            type="list"
-          >
-            {(provided) => (
-              <div
-                className="flex items-start "
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {orderBy(list, ["order"], ["asc"])?.map((column: List) => (
-                  <List
-                    key={column.id}
-                    list={column}
-                    updateTitle={handleListTitle}
-                  />
-                ))}
-                {provided.placeholder}
-                <CreateList getTitle={handleCreateList} />
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      )}
+      {Board}
       {/* Board ending */}
     </div>
   );
