@@ -54,7 +54,7 @@ const Card: React.FC<Props> = ({
 
   return (
     <>
-      <Draggable draggableId={card.id.toString()} index={card.order}>
+      <Draggable draggableId={`card-${card.id}`} index={card.order}>
         {(provided) => (
           <div
             className="px-2 py-1 mx-2 mt-2 text-sm bg-gray-100 shadow cursor-pointer group"
