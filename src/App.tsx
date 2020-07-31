@@ -47,7 +47,7 @@ const App = () => {
   };
 
   const handleDrag = (result: any) => {
-    const { destination, source, type, draggableId } = result;
+    const { destination, source, type } = result;
 
     if (!destination) {
       return;
@@ -61,22 +61,23 @@ const App = () => {
     }
 
     if (type === "list") {
-      if (source.index - destination.index < 0) {
-        for (let i = source.index + 1; i <= destination.index; i++) {
-          editList({
-            id: orderBy(list, ["order"], ["asc"])[i].id,
-            order: orderBy(list, ["order"], ["asc"])[i - 1].order,
-          });
-        }
-      } else if (source.index - destination.index > 0) {
-        for (let i = destination.index; i < source.index; i++) {
-          editList({
-            id: orderBy(list, ["order"], ["asc"])[i].id,
-            order: orderBy(list, ["order"], ["asc"])[i + 1].order,
-          });
-        }
-      }
-      editList({ id: draggableId, order: destination.index });
+      // if (source.index - destination.index < 0) {
+      //   for (let i = source.index + 1; i <= destination.index; i++) {
+      //     editList({
+      //       id: orderBy(list, ["order"], ["asc"])[i].id,
+      //       order: orderBy(list, ["order"], ["asc"])[i - 1].order,
+      //     });
+      //   }
+      // } else if (source.index - destination.index > 0) {
+      //   for (let i = destination.index; i < source.index; i++) {
+      //     editList({
+      //       id: orderBy(list, ["order"], ["asc"])[i].id,
+      //       order: orderBy(list, ["order"], ["asc"])[i + 1].order,
+      //     });
+      //   }
+      // }
+      // editList({ id: draggableId, order: destination.index });
+      return;
     }
   };
 
