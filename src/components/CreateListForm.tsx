@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.FormHTMLAttributes<HTMLFormElement>,
-    HTMLFormElement
-  > {
+interface Props {
   closeForm: () => void;
   saveForm?: any;
 }
 
-const FormList: React.FC<Props> = ({ closeForm, saveForm }) => {
+const CreateListForm: React.FC<Props> = ({ closeForm, saveForm }) => {
   const [listTitle, setListTitle] = useState<string>("");
 
   return (
@@ -45,4 +41,4 @@ const FormList: React.FC<Props> = ({ closeForm, saveForm }) => {
   );
 };
 
-export default FormList;
+export default CreateListForm;

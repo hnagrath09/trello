@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import PlusIcon from "./icons/PlusIcon";
-import FormList from "./FormList";
+import CreateListForm from "./CreateListForm";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -22,7 +22,7 @@ const CreateList: React.FC<Props> = ({ getTitle }) => {
   return (
     <>
       {isCreating ? (
-        <FormList
+        <CreateListForm
           closeForm={() => {
             setIsCreating(false);
           }}

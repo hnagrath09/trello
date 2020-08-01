@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.FormHTMLAttributes<HTMLFormElement>,
-    HTMLFormElement
-  > {
+interface Props {
   closeForm: () => void;
   saveForm?: any;
 }
 
-const FormCard: React.FC<Props> = ({ closeForm, saveForm }) => {
+const CreateCardForm: React.FC<Props> = ({ closeForm, saveForm }) => {
   const [cardTitle, setCardTitle] = useState<string>("");
 
   return (
@@ -45,4 +41,4 @@ const FormCard: React.FC<Props> = ({ closeForm, saveForm }) => {
   );
 };
 
-export default FormCard;
+export default CreateCardForm;

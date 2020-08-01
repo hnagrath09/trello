@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import PlusIcon from "./icons/PlusIcon";
-import FormCard from "./FormCard";
+import CreateCardForm from "./CreateCardForm";
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  > {
+interface Props {
   getTitle?: any;
 }
 
@@ -21,7 +17,7 @@ const CreateCard: React.FC<Props> = ({ getTitle }) => {
   return (
     <>
       {isCreating ? (
-        <FormCard
+        <CreateCardForm
           closeForm={() => {
             setIsCreating(false);
           }}
