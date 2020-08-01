@@ -18,11 +18,7 @@ import ClockIcon from "./icons/ClockIcon";
 import ClipboardCheckIcon from "./icons/ClipboardCheckIcon";
 import useStateFromProp from "../hooks/useStateFromProp";
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+interface Props {
   show: boolean;
   cardInfo: {
     id: number;
