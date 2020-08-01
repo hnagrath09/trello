@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { Modal } from "antd";
 
-import Modal from "./Modal";
+// import Modal from "./Modal";
 import PencilIcon from "./icons/PencilIcon";
 import MenuAlt2Icon from "./icons/MenuAlt2Icon";
+import CardDetails from "./CardDetails";
 
 interface card {
   id: number;
@@ -40,7 +42,11 @@ const Card: React.FC<Props> = ({
     setOpen(true);
   };
 
-  const hideModal = () => {
+  const handleOk = () => {
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
     setOpen(false);
   };
 
@@ -75,13 +81,25 @@ const Card: React.FC<Props> = ({
       </Draggable>
 
       <Modal
-        show={open}
-        handleCancel={hideModal}
-        cardInfo={card}
-        listInfo={column}
-        updateCardDescription={handleCardDescription}
-        updateCardTitle={handleCardTitle}
-      />
+        visible={open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={null}
+        width={750}
+        centered
+        bodyStyle={{
+          backgroundColor: "#edf2f7",
+          paddingTop: "8px",
+          paddingBottom: "10px",
+        }}
+      >
+        <CardDetails
+          cardInfo={card}
+          listInfo={column}
+          updateCardTitle={handleCardTitle}
+          updateCardDescription={handleCardDescription}
+        />
+      </Modal>
     </>
   );
 };
