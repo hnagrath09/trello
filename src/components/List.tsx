@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useQuery, useMutation, queryCache } from "react-query";
+import { Dropdown, Menu } from "antd";
 
 import Card from "./Card";
 import CreateCard from "./CreateCard";
@@ -8,6 +9,28 @@ import { fetchCards, createCard, updateCard } from "../queries/cardQueries";
 
 import useStateFromProp from "../hooks/useStateFromProp";
 import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
+
+const listOptions = (
+  <Menu>
+    <Menu.Item key="0">
+      <div className="w-16 mx-auto">List Actions</div>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="1">Add Card...</Menu.Item>
+    <Menu.Item key="2">Copy List...</Menu.Item>
+    <Menu.Item key="3">Move List...</Menu.Item>
+    <Menu.Item key="4">Watch</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="5">Sort By...</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="6">Move All Cards in This List...</Menu.Item>
+    <Menu.Item key="7" className="mr-20">
+      Archive All Cards in This List...
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="8">Archive This List</Menu.Item>
+  </Menu>
+);
 
 interface Card {
   id: number;
@@ -111,9 +134,15 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
               </div>
             )}
 
-            <div className="p-1 mr-1 rounded-sm cursor-pointer hover:bg-gray-500">
-              <HorizontalDotsIcon className="w-4 h-4" />
-            </div>
+            <Dropdown
+              overlay={listOptions}
+              trigger={["click"]}
+              overlayStyle={{ paddingRight: "20px" }}
+            >
+              <div className="p-1 mr-1 rounded-sm cursor-pointer hover:bg-gray-500">
+                <HorizontalDotsIcon className="w-4 h-4" />
+              </div>
+            </Dropdown>
           </div>
           <Droppable droppableId={list.id.toString()}>
             {(provided) => (
