@@ -18,6 +18,33 @@ import ArrowRightIcon from "./icons/ArrowRightIcon";
 import PhotographIcon from "./icons/PhotographIcon";
 import ClockIcon from "./icons/ClockIcon";
 import ClipboardCheckIcon from "./icons/ClipboardCheckIcon";
+import { Dropdown, Menu } from "antd";
+
+const memberOptions = (
+  <Menu>
+    <Menu.Item key="1">
+      <div className="w-16 mx-auto">Members</div>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="2">
+      <input
+        className="w-64 px-2 py-1 border-2 border-gray-400 rounded-sm focus:outline-none focus:border-blue-600"
+        placeholder="Search members"
+      />
+    </Menu.Item>
+    <Menu.Item key="3">
+      <span className="text-xs font-bold tracking-wide text-gray-600">
+        BOARD MEMBERS
+      </span>
+    </Menu.Item>
+    <Menu.Item key="4">
+      <span className="w-6 h-6 p-1 mr-4 text-xs font-bold tracking-wide text-gray-700 bg-gray-300 rounded-full">
+        HN
+      </span>
+      <span className="font-semibold">Himanshu Nagrath</span>
+    </Menu.Item>
+  </Menu>
+);
 
 interface Props {
   cardInfo: {
@@ -178,10 +205,12 @@ const CardDetails: React.FC<Props> = ({
           <div className="mx-4 mb-2 text-sm font-medium text-gray-600">
             ADD TO CARD
           </div>
-          <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-            <UserIcon className="w-4 h-4 mr-1" />
-            Members
-          </div>
+          <Dropdown overlay={memberOptions} trigger={["click"]}>
+            <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
+              <UserIcon className="w-4 h-4 mr-1" />
+              Members
+            </div>
+          </Dropdown>
           <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
             <TagIcon className="w-4 h-4 mr-1" />
             Labels
