@@ -85,7 +85,7 @@ const Card: React.FC<Props> = ({
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
-        width={750}
+        width={720}
         centered
         bodyStyle={{
           backgroundColor: "#edf2f7",

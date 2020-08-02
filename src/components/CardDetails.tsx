@@ -88,7 +88,7 @@ const CardDetails: React.FC<Props> = ({
       {/* Title End */}
 
       <div className="flex">
-        <div className="w-2/3 mx-5">
+        <div className="w-3/4 ml-5">
           {/* Card Description */}
           <div className="flex items-center mt-6">
             <MenuAlt2Icon className="w-5 h-5 mr-3" />
@@ -173,7 +173,7 @@ const CardDetails: React.FC<Props> = ({
         </div>
 
         {/* Right side of modal */}
-        <div className="w-1/3 pt-2 ml-6">
+        <div className="w-1/3 pt-2 ml-4">
           <div className="mx-4 mb-2 text-sm font-medium text-gray-600">
             ADD TO CARD
           </div>

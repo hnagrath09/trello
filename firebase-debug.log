@@ -1,0 +1,44 @@
+[debug] [2020-08-01T19:16:21.256Z] ----------------------------------------------------------------------
+[debug] [2020-08-01T19:16:21.259Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2020-08-01T19:16:21.259Z] CLI Version:   8.0.2
+[debug] [2020-08-01T19:16:21.259Z] Platform:      darwin
+[debug] [2020-08-01T19:16:21.259Z] Node Version:  v12.16.2
+[debug] [2020-08-01T19:16:21.261Z] Time:          Sun Aug 02 2020 00:46:21 GMT+0530 (India Standard Time)
+[debug] [2020-08-01T19:16:21.261Z] ----------------------------------------------------------------------
+[debug] [2020-08-01T19:16:21.261Z] 
+[debug] [2020-08-01T19:16:21.282Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-08-01T19:16:21.283Z] > authorizing via signed-in user
+[debug] [2020-08-01T19:16:21.283Z] [iam] checking project sober-monk for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-08-01T19:16:21.285Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-08-01T19:16:21.285Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-08-01T19:16:23.134Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 01 Aug 2020 19:16:23 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-01T19:16:23.156Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/sober-monk:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2020-08-01T19:16:25.178Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 01 Aug 2020 19:16:25 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=1445","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-01T19:16:25.179Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project sober-monk:
+
+  firebase.projects.get
+  firebasehosting.sites.update
+[debug] [2020-08-01T19:16:25.181Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/sober-monk  
+ 
+[debug] [2020-08-01T19:16:27.312Z] <<< HTTP RESPONSE 403 {"vary":"X-Origin, Referer, Origin,Accept-Encoding","content-type":"application/json; charset=UTF-8","date":"Sat, 01 Aug 2020 19:16:27 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-01T19:16:27.312Z] <<< HTTP RESPONSE BODY {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2020-08-01T19:16:27.316Z] HTTP Error: 403, The caller does not have permission
+[debug] [2020-08-01T19:16:27.318Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/responseToError.js:38:12)
+    at Request._callback (/usr/local/lib/node_modules/firebase-tools/lib/api.js:40:35)
+    at Request.self.callback (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:185:22)
+    at Request.emit (events.js:310:20)
+    at Request.EventEmitter.emit (domain.js:482:12)
+    at Request.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1154:10)
+    at Request.emit (events.js:310:20)
+    at Request.EventEmitter.emit (domain.js:482:12)
+    at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1076:12)
+    at Object.onceWrapper (events.js:416:28)
+    at IncomingMessage.emit (events.js:322:22)
+    at IncomingMessage.EventEmitter.emit (domain.js:482:12)
+    at endReadableNT (_stream_readable.js:1187:12)
+    at processTicksAndRejections (internal/process/task_queues.js:84:21)
+[error] 
+[error] Error: Failed to get Firebase project sober-monk. Please make sure the project exists and your account has permission to access it.
