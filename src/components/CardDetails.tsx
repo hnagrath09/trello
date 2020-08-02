@@ -37,7 +37,7 @@ const memberOptions = (
         BOARD MEMBERS
       </div>
       <div className="py-2 mt-2 cursor-pointer hover:bg-gray-200">
-        <span className="w-6 h-6 p-2 ml-2 mr-4 text-xs font-bold tracking-wide text-gray-700 bg-gray-300 rounded-full">
+        <span className="w-6 h-6 p-2 ml-1 mr-4 text-xs font-bold tracking-wide text-gray-700 bg-gray-300 rounded-full">
           HN
         </span>
         <span className="font-semibold">Himanshu Nagrath</span>
@@ -72,6 +72,44 @@ const checklistOptions = (
       <button className="px-6 py-1 mt-4 mb-2 text-white bg-green-500 rounded-sm focus:outline-none hover:bg-green-400">
         Add
       </button>
+    </div>
+  </Menu>
+);
+
+const attachmentOptions = (
+  <Menu>
+    <Menu.Item key="0">
+      <div className="w-24 mx-auto font-medium">Attach From...</div>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="1">Computer</Menu.Item>
+    <Menu.Item key="2">Trello</Menu.Item>
+    <Menu.Item key="3">Google Drive</Menu.Item>
+    <Menu.Item key="4">Dropbox</Menu.Item>
+    <Menu.Item key="5">Box</Menu.Item>
+    <Menu.Item key="6">One Drive</Menu.Item>
+    <Menu.Divider />
+    <div className="px-3 py-2 bg-white">
+      <div className="text-xs font-bold text-gray-700">Attach a link</div>
+      <input
+        className="w-64 px-2 py-1 mt-1 border-2 border-gray-400 rounded-sm focus:outline-none focus:border-blue-600"
+        placeholder="Paste any link here..."
+        autoFocus
+        onFocus={(event) => {
+          event.target.select();
+        }}
+      />
+      <div>
+        <button className="px-2 py-1 mt-3 text-sm bg-gray-300 rounded-sm cursor-pointer">
+          Attach
+        </button>
+      </div>
+    </div>
+    <Menu.Divider />
+    <div className="px-3 py-2 text-sm">
+      <p>Tip: With Power-Ups, you can attach</p>
+      <p> conversations from Slack, pull requests</p>
+      <p> from GitHub, and leads from Salesforce.</p>
     </div>
   </Menu>
 );
@@ -255,41 +293,7 @@ const CardDetails: React.FC<Props> = ({
             <ClockIcon className="w-4 h-4 mr-1" />
             Due Date
           </div>
-          <Dropdown
-            trigger={["click"]}
-            overlay={() => (
-              <Menu>
-                <Menu.Item key="0">Attach From...</Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="1">Computer</Menu.Item>
-                <Menu.Item key="2">Trello</Menu.Item>
-                <Menu.Item key="3">Google Drive</Menu.Item>
-                <Menu.Item key="4">Dropbox</Menu.Item>
-                <Menu.Item key="5">Box</Menu.Item>
-                <Menu.Item key="6">One Drive</Menu.Item>
-                <Menu.Divider />
-                <div className="p-2 bg-white">
-                  <div className="text-xs font-bold text-gray-700">
-                    Attach a link
-                  </div>
-                  <input
-                    className="w-64 px-2 py-1 mt-1 border-2 border-gray-400 rounded-sm focus:outline-none focus:border-blue-600"
-                    placeholder="Paste any link here..."
-                    autoFocus
-                    onFocus={(event) => {
-                      event.target.select();
-                    }}
-                  />
-                  <div>
-                    <button className="px-2 py-1 mt-2 text-sm bg-gray-300 rounded-sm cursor-pointer">
-                      Attach
-                    </button>
-                  </div>
-                </div>
-                <Menu.Divider />
-              </Menu>
-            )}
-          >
+          <Dropdown trigger={["click"]} overlay={attachmentOptions}>
             <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
               <PaperClipIcon className="w-4 h-4 mr-1" />
               Attachment
