@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import "antd/dist/antd.css";
 
 import useStateFromProp from "../hooks/useStateFromProp";
@@ -132,12 +133,12 @@ const CardDetails: React.FC<Props> = ({
             </form>
           ) : cardInfo.description ? (
             <div
-              className="ml-8 text-sm text-gray-800 cursor-pointer"
+              className="ml-8 cursor-pointer"
               onClick={() => {
                 setEditDescription(true);
               }}
             >
-              {cardInfo.description}
+              <ReactMarkdown source={cardInfo.description} />
             </div>
           ) : (
             <div
