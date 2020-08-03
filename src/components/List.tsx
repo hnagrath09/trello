@@ -38,7 +38,7 @@ interface Card {
   order: number;
   title: string;
   description: string;
-  parentId: number; // Remove this
+  created_at: string;
 }
 
 interface Props
