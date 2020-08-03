@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 const client = Axios.create({
-  baseURL: "http://localhost:1337",
+  baseURL: "https://damp-coast-59968.herokuapp.com/",
 });
 
 export const fetchCards = async () => {
