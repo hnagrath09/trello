@@ -8,6 +8,7 @@ import { fetchLists, createList, updateList } from "./queries/listQueries";
 
 import HomeIcon from "./components/icons/HomeIcon";
 import { Dropdown, Menu } from "antd";
+import { orderBy } from "lodash-es";
 
 const profileOptions = (
   <Menu>
@@ -138,7 +139,7 @@ const App = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {list?.map((column: List) => (
+                {orderBy(list, ["order"], ["asc"])?.map((column: List) => (
                   <List
                     key={column.id}
                     list={column}
