@@ -13,6 +13,7 @@ interface card {
   order: number;
   title: string;
   description: string;
+  created_at: string;
 }
 
 interface Props
