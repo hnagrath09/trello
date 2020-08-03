@@ -9,7 +9,6 @@ import CardDetails from "./CardDetails";
 
 interface card {
   id: number;
-  parentId: number;
   order: number;
   title: string;
   description: string;
