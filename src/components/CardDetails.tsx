@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Dropdown, Menu } from "antd";
 import "antd/dist/antd.css";
+import moment from "moment";
 
 import useStateFromProp from "../hooks/useStateFromProp";
 
@@ -117,10 +118,10 @@ const attachmentOptions = (
 interface Props {
   cardInfo: {
     id: number;
-    parentId: number;
     order: number;
     title: string;
     description: string;
+    created_at: string;
   };
   listInfo: {
     id: number;
@@ -146,7 +147,7 @@ const CardDetails: React.FC<Props> = ({
     <>
       {/* Title Starting */}
       <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
-        <NewspaperIcon className="w-5 h-5 mr-3" />
+        <NewspaperIcon className="w-6 h-6 mr-3" />
         {editCardTitle ? (
           <form
             onSubmit={(event) => {
@@ -166,7 +167,7 @@ const CardDetails: React.FC<Props> = ({
           </form>
         ) : (
           <div
-            className="cursor-pointer"
+            className="text-xl cursor-pointer"
             onClick={() => {
               setEditCardTitle(true);
             }}
@@ -187,8 +188,10 @@ const CardDetails: React.FC<Props> = ({
         <div className="w-3/4 ml-5">
           {/* Card Description */}
           <div className="flex items-center mt-6">
-            <MenuAlt2Icon className="w-5 h-5 mr-3" />
-            <h2 className="font-semibold text-gray-600 ">Description</h2>
+            <MenuAlt2Icon className="w-6 h-6 mr-3" />
+            <h2 className="text-lg font-semibold text-gray-600 ">
+              Description
+            </h2>
           </div>
           {editDescription ? (
             <form
@@ -249,8 +252,8 @@ const CardDetails: React.FC<Props> = ({
           {/* Activities */}
           <div className="flex items-center justify-between mt-6 text-gray-700">
             <div className="flex items-center">
-              <SpeakerPhoneIcon className="w-5 h-5 mr-3" />
-              <h2 className="font-semibold text-gray-600 ">Activity</h2>
+              <SpeakerPhoneIcon className="w-6 h-6 mr-3" />
+              <h2 className="text-lg font-semibold text-gray-600 ">Activity</h2>
             </div>
             <div className="px-2 py-1 text-sm bg-gray-300 rounded-sm cursor-pointer">
               Hide Details
@@ -259,11 +262,26 @@ const CardDetails: React.FC<Props> = ({
 
           {/* Enter comment */}
           <div className="flex items-center my-4">
-            <span className="px-1 py-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
+            <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
               HN
             </span>
             <div className="w-full px-3 py-1 ml-2 text-sm text-gray-700 bg-white">
               Write a comment...
+            </div>
+          </div>
+          <div className="flex items-center ">
+            <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
+              HN
+            </span>
+            <div>
+              <div>
+                <span className="ml-3 font-bold">Himanshu Nagrath</span>
+                <span> added this card to </span>
+                <span>{listInfo.title}</span>
+              </div>
+              <span className="ml-3 text-xs">
+                {moment(cardInfo.created_at).fromNow()}
+              </span>
             </div>
           </div>
         </div>
