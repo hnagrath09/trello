@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Dropdown, Menu } from "antd";
+import { Dropdown, Menu, Calendar } from "antd";
 import "antd/dist/antd.css";
 import moment from "moment";
 
@@ -73,6 +73,43 @@ const checklistOptions = (
       <button className="px-6 py-1 mt-4 mb-2 text-white bg-green-500 rounded-sm focus:outline-none hover:bg-green-400">
         Add
       </button>
+    </div>
+  </Menu>
+);
+
+const dueDateOptions = (
+  <Menu>
+    <Menu.Item key="0">
+      <div className="w-32 mx-auto font-medium">Change Due Date</div>
+    </Menu.Item>
+    <Menu.Divider />
+    <div className="max-w-xs px-4">
+      <div className="border border-gray-400">
+        <Calendar fullscreen={false} />
+      </div>
+      <div className="mt-4 text-xs font-bold text-gray-700">Set Reminder</div>
+      <div className="flex items-center justify-between px-2 mt-1 mb-3 text-sm border border-gray-600 rounded-sm">
+        None
+        <DownIcon className="w-4 h-4" />
+      </div>
+      <p>Reminders will be sent to all members and watchers of this card</p>
+      <div className="flex items-center justify-between">
+        <button className="px-6 py-1 mt-4 mb-2 text-white bg-green-500 rounded-sm focus:outline-none hover:bg-green-400">
+          Save
+        </button>
+        <button className="px-6 py-1 mt-4 mb-2 text-white bg-red-500 rounded-sm focus:outline-none hover:bg-red-400">
+          Remove
+        </button>
+      </div>
+    </div>
+    <Menu.Divider />
+    <div className="max-w-xs px-4 py-2">
+      <div className="px-2 py-1 bg-gray-200 rounded-sm ">
+        <p>
+          Click the “Calendar” button in the board header to open the calendar.
+          To change calendar settings, click “Power-Ups” in the board menu.
+        </p>
+      </div>
     </div>
   </Menu>
 );
@@ -307,10 +344,12 @@ const CardDetails: React.FC<Props> = ({
               Checklist
             </div>
           </Dropdown>
-          <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
-            <ClockIcon className="w-4 h-4 mr-1" />
-            Due Date
-          </div>
+          <Dropdown trigger={["click"]} overlay={dueDateOptions}>
+            <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
+              <ClockIcon className="w-4 h-4 mr-1" />
+              Due Date
+            </div>
+          </Dropdown>
           <Dropdown trigger={["click"]} overlay={attachmentOptions}>
             <div className="flex items-center px-4 py-1 mx-4 mb-2 text-sm text-gray-700 bg-gray-300 rounded-sm cursor-pointer ">
               <PaperClipIcon className="w-4 h-4 mr-1" />
