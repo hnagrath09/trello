@@ -9,6 +9,7 @@ import { fetchLists, createList, updateList } from "./queries/listQueries";
 import HomeIcon from "./components/icons/HomeIcon";
 import { Dropdown, Menu } from "antd";
 import { orderBy } from "lodash-es";
+import arrayMove from "array-move";
 
 const profileOptions = (
   <Menu>
@@ -39,7 +40,7 @@ const App = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
 
   const [addList] = useMutation(createList, {
-    onSuccess: (createdList) => {
+    onMutate: (createdList) => {
       queryCache.setQueryData(
         "lists",
         list ? [...list, createdList] : [createdList]
@@ -48,7 +49,7 @@ const App = () => {
   });
 
   const [editList] = useMutation(updateList, {
-    onSuccess: (updatedList) => {
+    onMutate: (updatedList) => {
       queryCache.setQueryData(
         "lists",
         list?.map((column) =>
@@ -83,22 +84,26 @@ const App = () => {
     }
 
     if (type === "list") {
-      // if (source.index - destination.index < 0) {
-      //   for (let i = source.index + 1; i <= destination.index; i++) {
-      //     editList({
-      //       id: orderBy(list, ["order"], ["asc"])[i].id,
-      //       order: orderBy(list, ["order"], ["asc"])[i - 1].order,
-      //     });
-      //   }
-      // } else if (source.index - destination.index > 0) {
-      //   for (let i = destination.index; i < source.index; i++) {
-      //     editList({
-      //       id: orderBy(list, ["order"], ["asc"])[i].id,
-      //       order: orderBy(list, ["order"], ["asc"])[i + 1].order,
-      //     });
-      //   }
-      // }
-      // editList({ id: draggableId, order: destination.index });
+      const list = queryCache.getQueryData<List[]>("lists");
+      if (list) {
+        const updatedList = arrayMove(
+          orderBy(list, (list) => list.order),
+          source.index,
+          destination.index
+        );
+
+        const updatedItems = updatedList
+          .map((list, index) => ({ ...list, index }))
+          .filter((list) => list.order !== list.index);
+
+        const obj: any = {
+          updatedItems: {},
+        };
+        updatedItems.forEach((list) => {
+          obj.updatedItems[list.id] = list.index;
+        });
+      }
+
       return;
     }
   };
@@ -139,13 +144,15 @@ const App = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {orderBy(list, ["order"], ["asc"])?.map((column: List) => (
-                  <List
-                    key={column.id}
-                    list={column}
-                    updateTitle={handleListTitle}
-                  />
-                ))}
+                {orderBy(list, (list: List) => list.order)?.map(
+                  (column: List) => (
+                    <List
+                      key={column.id}
+                      list={column}
+                      updateTitle={handleListTitle}
+                    />
+                  )
+                )}
                 {provided.placeholder}
                 <CreateList getTitle={handleCreateList} />
               </div>
