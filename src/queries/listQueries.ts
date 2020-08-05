@@ -7,7 +7,7 @@ interface List {
 }
 
 const client = Axios.create({
-  baseURL: "https://damp-coast-59968.herokuapp.com/",
+  baseURL: "http://localhost:1337",
 });
 
 export const fetchLists = async () => {
@@ -37,5 +37,12 @@ export const updateList = async ({
   order?: number;
 }) => {
   const { data } = await client.put(`/lists/${id}`, { title, order });
+  return data;
+};
+
+export const reorderLists = async (updatedItems: { [id: number]: number }) => {
+  const { data } = await client.post<{ success: boolean }>(`/lists/reorder`, {
+    updatedItems,
+  });
   return data;
 };
