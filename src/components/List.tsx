@@ -52,6 +52,7 @@ interface Props
 
 const List: React.FC<Props> = ({ list, updateTitle }) => {
   const { data: card } = useQuery("cards", fetchCards);
+
   const [addCard] = useMutation(createCard, {
     onSuccess: (createdCard) => {
       queryCache.setQueryData(
@@ -60,12 +61,13 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
       );
     },
   });
+
   const [editCard] = useMutation(updateCard, {
-    onSuccess: (updatedCard) => {
+    onMutate: (updatedCard) => {
       queryCache.setQueryData(
         "cards",
         card?.map((task: Card) =>
-          task.id === updatedCard.id ? updatedCard : task
+          task.id === updatedCard.id ? { ...task, ...updatedCard } : task
         )
       );
     },
