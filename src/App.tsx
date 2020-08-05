@@ -4,7 +4,12 @@ import { useQuery, useMutation, queryCache } from "react-query";
 
 import List from "./components/List";
 import CreateList from "./components/CreateList";
-import { fetchLists, createList, updateList } from "./queries/listQueries";
+import {
+  fetchLists,
+  createList,
+  updateList,
+  reorderLists,
+} from "./queries/listQueries";
 
 import HomeIcon from "./components/icons/HomeIcon";
 import { Dropdown, Menu } from "antd";
@@ -40,7 +45,7 @@ const App = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
 
   const [addList] = useMutation(createList, {
-    onMutate: (createdList) => {
+    onSuccess: (createdList) => {
       queryCache.setQueryData(
         "lists",
         list ? [...list, createdList] : [createdList]
@@ -49,11 +54,25 @@ const App = () => {
   });
 
   const [editList] = useMutation(updateList, {
+    // data passed to editList function
     onMutate: (updatedList) => {
       queryCache.setQueryData(
         "lists",
         list?.map((column) =>
-          column.id === updatedList.id ? updatedList : column
+          column.id === updatedList.id ? { ...column, ...updatedList } : column
+        )
+      );
+    },
+  });
+
+  const [listReorder] = useMutation(reorderLists, {
+    onMutate: (reorderData: { [id: string]: number }) => {
+      queryCache.setQueryData(
+        "lists",
+        list?.map((column) =>
+          reorderData[column.id]
+            ? { ...column, order: reorderData[column.id] }
+            : column
         )
       );
     },
@@ -96,12 +115,11 @@ const App = () => {
           .map((list, index) => ({ ...list, index }))
           .filter((list) => list.order !== list.index);
 
-        const obj: any = {
-          updatedItems: {},
-        };
+        const obj: { [id: number]: number } = {};
         updatedItems.forEach((list) => {
-          obj.updatedItems[list.id] = list.index;
+          obj[list.id] = list.index;
         });
+        listReorder(obj);
       }
 
       return;
