@@ -90,13 +90,15 @@ const App = () => {
   });
 
   const [cardReorder] = useMutation(reorderCards, {
-    onMutate: (reorderData: { [id: number]: number }) => {
+    onMutate: (reorderData: {
+      [id: number]: { order: number; listId: number };
+    }) => {
       const card = queryCache.getQueryData<Card[]>(["cards", 12]);
       queryCache.setQueryData(
         ["cards", 12],
         card?.map((task) => ({
           ...task,
-          order: reorderData[task.id] ?? task.order,
+          order: reorderData[task.id]?.order ?? task.order,
         }))
       );
     },
@@ -164,9 +166,13 @@ const App = () => {
         .map((task, index) => ({ ...task, index }))
         .filter((task) => task.order !== task.index);
 
-      const obj: { [id: number]: number } = {};
+      const obj: {
+        [id: number]: { order: number; listId: number };
+      } = {};
       updatedItems.forEach((task) => {
-        obj[task.id] = task.index;
+        obj[task.id] = { order: -1, listId: -1 };
+        obj[task.id].order = task.index;
+        obj[task.id].listId = parseInt(destination.droppableId);
       });
       console.log({ obj });
       cardReorder(obj);
