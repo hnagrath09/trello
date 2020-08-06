@@ -268,7 +268,7 @@ const CardDetails: React.FC<Props> = ({
             </form>
           ) : cardInfo.description ? (
             <div
-              className="ml-8 cursor-pointer"
+              className="ml-8 prose-sm prose cursor-pointer"
               onClick={() => {
                 setEditDescription(true);
               }}
