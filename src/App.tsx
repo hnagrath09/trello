@@ -80,11 +80,10 @@ const App = () => {
     onMutate: (reorderData: { [id: string]: number }) => {
       queryCache.setQueryData(
         "lists",
-        list?.map((column) =>
-          reorderData[column.id]
-            ? { ...column, order: reorderData[column.id] }
-            : column
-        )
+        list?.map((column) => ({
+          ...column,
+          order: reorderData[column.id] ?? column.order,
+        }))
       );
     },
   });
@@ -93,9 +92,10 @@ const App = () => {
     onMutate: (reorderData: {
       [id: number]: { order: number; listId: number };
     }) => {
-      const card = queryCache.getQueryData<Card[]>(["cards", 12]);
+      const listId = reorderData[parseInt(Object.keys(reorderData)[0])].listId;
+      const card = queryCache.getQueryData<Card[]>(["cards", listId]);
       queryCache.setQueryData(
-        ["cards", 12],
+        ["cards", listId],
         card?.map((task) => ({
           ...task,
           order: reorderData[task.id]?.order ?? task.order,
@@ -127,30 +127,29 @@ const App = () => {
     ) {
       return;
     }
-
-    if (type === "list") {
+    // For list drag drop
+    if (type === "list" && list) {
       const list = queryCache.getQueryData<List[]>("lists");
-      if (list) {
-        const updatedList = arrayMove(
-          orderBy(list, (list) => list.order),
-          source.index,
-          destination.index
-        );
+      const updatedList = arrayMove(
+        orderBy(list, (list) => list.order),
+        source.index,
+        destination.index
+      );
 
-        // Filtering all lists which are needed for order updation
-        const updatedItems = updatedList
-          .map((list, index) => ({ ...list, index }))
-          .filter((list) => list.order !== list.index);
+      // Filtering all lists which are needed for order updation
+      const updatedItems = updatedList
+        .map((list, index) => ({ ...list, index }))
+        .filter((list) => list.order !== list.index);
 
-        const obj: { [id: number]: number } = {};
-        updatedItems.forEach((list) => {
-          obj[list.id] = list.index;
-        });
-        listReorder(obj);
-      }
+      const obj: { [id: number]: number } = {};
+      updatedItems.forEach((list) => {
+        obj[list.id] = list.index;
+      });
+
+      listReorder(obj);
       return;
     }
-
+    // For card drag drop within the same list
     if (source.droppableId === destination.droppableId) {
       const card = queryCache.getQueryData<Card[]>([
         "cards",
@@ -174,10 +173,10 @@ const App = () => {
         obj[task.id].order = task.index;
         obj[task.id].listId = parseInt(destination.droppableId);
       });
-      console.log({ obj });
       cardReorder(obj);
       return;
     }
+    // For card drag drop outside the list
   };
 
   return (
