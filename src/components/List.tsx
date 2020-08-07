@@ -150,8 +150,8 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
           <Droppable droppableId={list.id.toString()}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {orderBy(card, (card) => card.order)?.map((task: Card, index) =>
-                  task.list.id === list.id ? (
+                {orderBy(card, (card) => card.order)?.map(
+                  (task: Card, index) => (
                     <Card
                       key={task.id}
                       card={task}
@@ -160,7 +160,7 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
                       updateCardDes={handleCardDescription}
                       updateCardTit={handleCardTitle}
                     />
-                  ) : undefined
+                  )
                 )}
                 {provided.placeholder}
               </div>
