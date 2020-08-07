@@ -5,10 +5,15 @@ import { Dropdown, Menu } from "antd";
 
 import Card from "./Card";
 import CreateCard from "./CreateCard";
-import { fetchCards, createCard, updateCard } from "../queries/cardQueries";
+import {
+  fetchCardsForList,
+  createCard,
+  updateCard,
+} from "../queries/cardQueries";
 
 import useStateFromProp from "../hooks/useStateFromProp";
 import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
+import { orderBy } from "lodash-es";
 
 const listOptions = (
   <Menu>
@@ -41,31 +46,29 @@ interface Card {
   created_at: string;
 }
 
-interface Props
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  > {
-  list: { id: number; order: number; title: string };
-  updateTitle: any;
+interface Props {
+  list: { id: number; order: number; title: string; cards?: [{ id: number }] };
+  updateTitle: (title: string, listId: number) => void;
 }
 
 const List: React.FC<Props> = ({ list, updateTitle }) => {
-  const { data: card } = useQuery("cards", fetchCards);
+  const { data: card } = useQuery(["cards", list.id], fetchCardsForList);
+
   const [addCard] = useMutation(createCard, {
     onSuccess: (createdCard) => {
       queryCache.setQueryData(
-        "cards",
+        ["cards", list.id],
         card ? [...card, createdCard] : createdCard
       );
     },
   });
+
   const [editCard] = useMutation(updateCard, {
-    onSuccess: (updatedCard) => {
+    onMutate: (updatedCard) => {
       queryCache.setQueryData(
-        "cards",
+        ["cards", list.id],
         card?.map((task: Card) =>
-          task.id === updatedCard.id ? updatedCard : task
+          task.id === updatedCard.id ? { ...task, ...updatedCard } : task
         )
       );
     },
@@ -79,7 +82,7 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
       addCard({
         title,
         description: "",
-        order: card?.length + 1 ?? 0,
+        order: card?.length ?? 0,
         listId: list.id,
       });
     }
@@ -147,16 +150,17 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
           <Droppable droppableId={list.id.toString()}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {card?.map((task: Card) =>
-                  task.list.id === list.id ? (
+                {orderBy(card, (card) => card.order)?.map(
+                  (task: Card, index) => (
                     <Card
                       key={task.id}
                       card={task}
                       column={list}
+                      index={index}
                       updateCardDes={handleCardDescription}
                       updateCardTit={handleCardTitle}
                     />
-                  ) : undefined
+                  )
                 )}
                 {provided.placeholder}
               </div>

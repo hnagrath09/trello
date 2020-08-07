@@ -1,4 +1,7 @@
 import React from "react";
+import arrayMove from "array-move";
+import { orderBy } from "lodash-es";
+import { Dropdown, Menu } from "antd";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useQuery, useMutation, queryCache } from "react-query";
 
@@ -12,9 +15,7 @@ import {
 } from "./queries/listQueries";
 
 import HomeIcon from "./components/icons/HomeIcon";
-import { Dropdown, Menu } from "antd";
-import { orderBy } from "lodash-es";
-import arrayMove from "array-move";
+import { reorderCards } from "./queries/cardQueries";
 
 const profileOptions = (
   <Menu>
@@ -39,6 +40,16 @@ interface List {
   id: number;
   order: number;
   title: string;
+  cards?: [{ id: number }];
+}
+
+interface Card {
+  id: number;
+  list: { id: number; title: string; order: number };
+  order: number;
+  title: string;
+  description: string;
+  created_at: string;
 }
 
 const App = () => {
@@ -69,12 +80,22 @@ const App = () => {
     onMutate: (reorderData: { [id: string]: number }) => {
       queryCache.setQueryData(
         "lists",
-        list?.map((column) =>
-          reorderData[column.id]
-            ? { ...column, order: reorderData[column.id] }
-            : column
-        )
+        list?.map((column) => ({
+          ...column,
+          order: reorderData[column.id] ?? column.order,
+        }))
       );
+    },
+  });
+
+  const [cardReorder] = useMutation(reorderCards, {
+    onMutate: ([_, updatedCardsList]) => {
+      Object.keys(updatedCardsList).forEach((listId: string) => {
+        queryCache.setQueryData(
+          ["cards", parseInt(listId)],
+          updatedCardsList[parseInt(listId)]
+        );
+      });
     },
   });
 
@@ -89,7 +110,7 @@ const App = () => {
   };
 
   const handleDrag = (result: any) => {
-    const { destination, source, type } = result;
+    const { destination, source, type, draggableId } = result;
 
     if (!destination) {
       return;
@@ -101,28 +122,124 @@ const App = () => {
     ) {
       return;
     }
-
-    if (type === "list") {
+    // For list drag drop
+    if (type === "list" && list) {
       const list = queryCache.getQueryData<List[]>("lists");
-      if (list) {
-        const updatedList = arrayMove(
-          orderBy(list, (list) => list.order),
-          source.index,
-          destination.index
-        );
+      const updatedList = arrayMove(
+        orderBy(list, (list) => list.order),
+        source.index,
+        destination.index
+      );
 
-        const updatedItems = updatedList
-          .map((list, index) => ({ ...list, index }))
-          .filter((list) => list.order !== list.index);
+      // Filtering all lists which are needed for order updation
+      const updatedItems = updatedList
+        .map((list, index) => ({ ...list, index }))
+        .filter((list) => list.order !== list.index);
 
-        const obj: { [id: number]: number } = {};
-        updatedItems.forEach((list) => {
-          obj[list.id] = list.index;
-        });
-        listReorder(obj);
-      }
+      const obj: { [id: number]: number } = {};
+      updatedItems.forEach((list) => {
+        obj[list.id] = list.index;
+      });
 
-      return;
+      listReorder(obj);
+    }
+    // For card drag drop within the same list
+    else if (source.droppableId === destination.droppableId) {
+      const card = queryCache.getQueryData<Card[]>([
+        "cards",
+        parseInt(source.droppableId),
+      ]);
+      const updateCards = arrayMove(
+        orderBy(card, (card) => card.order),
+        source.index,
+        destination.index
+      );
+
+      const updatedItems = updateCards
+        .map((task, index) => ({ ...task, index }))
+        .filter((task) => task.order !== task.index);
+
+      const obj: {
+        [id: number]: { order: number; listId: number };
+      } = {};
+      updatedItems.forEach((task) => {
+        obj[task.id] = {
+          order: task.index,
+          listId: parseInt(source.droppableId),
+        };
+      });
+      cardReorder([
+        obj,
+        {
+          [source.droppableId]: updateCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
+        },
+      ]);
+    } else {
+      // When card is dragged and dropped in different list
+      const sourceCards = orderBy(
+        queryCache.getQueryData<Card[]>([
+          "cards",
+          parseInt(source.droppableId),
+        ]),
+        (card) => card.order
+      );
+
+      const sourceUpdatedCards = sourceCards?.filter(
+        (task) => task.id !== parseInt(draggableId.substr(5))
+      );
+
+      const draggedCard = sourceCards?.find(
+        (task) => task.id === parseInt(draggableId.substr(5))
+      );
+
+      const obj: {
+        [id: number]: { order: number; listId: number };
+      } = {};
+      // All cards in source list with order greater than dragged card order
+      sourceUpdatedCards?.forEach((task, index) => {
+        obj[task.id] = {
+          order: index,
+          listId: parseInt(source.droppableId),
+        };
+      });
+
+      const destinationCards = orderBy(
+        queryCache.getQueryData<Card[]>([
+          "cards",
+          parseInt(destination.droppableId),
+        ]),
+        (card) => card.order
+      );
+
+      destinationCards?.splice(destination.index, 0, draggedCard as Card);
+      destinationCards?.forEach((task, index) => {
+        obj[task.id] = {
+          order: index,
+          listId: parseInt(destination.droppableId),
+        };
+      });
+      // Card which is dragged
+      obj[draggableId.substr(5)] = {
+        order: destination.index,
+        listId: parseInt(destination.droppableId),
+      };
+
+      cardReorder([
+        obj,
+        {
+          [source.droppableId]: sourceUpdatedCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
+          [destination.droppableId]: destinationCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
+        },
+      ]);
     }
   };
 
@@ -162,15 +279,13 @@ const App = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {orderBy(list, (list: List) => list.order)?.map(
-                  (column: List) => (
-                    <List
-                      key={column.id}
-                      list={column}
-                      updateTitle={handleListTitle}
-                    />
-                  )
-                )}
+                {orderBy(list, ["order"], ["asc"]).map((column: List) => (
+                  <List
+                    key={column.id}
+                    list={column}
+                    updateTitle={handleListTitle}
+                  />
+                ))}
                 {provided.placeholder}
                 <CreateList getTitle={handleCreateList} />
               </div>
