@@ -70,9 +70,14 @@ export const updateCard = async ({
   }
 };
 
-export const reorderCards = async (updatedItems: {
-  [id: number]: { order: number; listId: number };
-}) => {
+export const reorderCards = async ([updatedItems]: [
+  {
+    [id: number]: { order: number; listId: number };
+  },
+  {
+    [id: number]: Card[];
+  }
+]) => {
   const { data } = await client.post("/cards/reorder", { updatedItems });
   return data;
 };
