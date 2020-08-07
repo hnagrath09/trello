@@ -89,18 +89,13 @@ const App = () => {
   });
 
   const [cardReorder] = useMutation(reorderCards, {
-    onMutate: (reorderData: {
-      [id: number]: { order: number; listId: number };
-    }) => {
-      const listId = reorderData[parseInt(Object.keys(reorderData)[0])].listId;
-      const card = queryCache.getQueryData<Card[]>(["cards", listId]);
-      queryCache.setQueryData(
-        ["cards", listId],
-        card?.map((task) => ({
-          ...task,
-          order: reorderData[task.id]?.order ?? task.order,
-        }))
-      );
+    onMutate: ([_, updatedCardsList]) => {
+      Object.keys(updatedCardsList).forEach((listId: string) => {
+        queryCache.setQueryData(
+          ["cards", parseInt(listId)],
+          updatedCardsList[parseInt(listId)]
+        );
+      });
     },
   });
 
@@ -115,7 +110,7 @@ const App = () => {
   };
 
   const handleDrag = (result: any) => {
-    const { destination, source, type } = result;
+    const { destination, source, type, draggableId } = result;
 
     if (!destination) {
       return;
@@ -147,21 +142,20 @@ const App = () => {
       });
 
       listReorder(obj);
-      return;
     }
     // For card drag drop within the same list
-    if (source.droppableId === destination.droppableId) {
+    else if (source.droppableId === destination.droppableId) {
       const card = queryCache.getQueryData<Card[]>([
         "cards",
         parseInt(source.droppableId),
       ]);
-      const updatedCard = arrayMove(
+      const updateCards = arrayMove(
         orderBy(card, (card) => card.order),
         source.index,
         destination.index
       );
 
-      const updatedItems = updatedCard
+      const updatedItems = updateCards
         .map((task, index) => ({ ...task, index }))
         .filter((task) => task.order !== task.index);
 
@@ -169,14 +163,87 @@ const App = () => {
         [id: number]: { order: number; listId: number };
       } = {};
       updatedItems.forEach((task) => {
-        obj[task.id] = { order: -1, listId: -1 };
-        obj[task.id].order = task.index;
-        obj[task.id].listId = parseInt(destination.droppableId);
+        obj[task.id] = {
+          order: task.index,
+          listId: parseInt(source.droppableId),
+        };
       });
-      cardReorder(obj);
-      return;
+      cardReorder([
+        obj,
+        {
+          [source.droppableId]: updateCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
+        },
+      ]);
+    } else {
+      // When card is dragged and dropped in different list
+      const sourceCards = orderBy(
+        queryCache.getQueryData<Card[]>([
+          "cards",
+          parseInt(source.droppableId),
+        ]),
+        (card) => card.order
+      );
+
+      const sourceUpdatedCards = sourceCards?.filter(
+        (task) => task.id !== parseInt(draggableId.substr(5))
+      );
+
+      const draggedCard = sourceCards?.find(
+        (task) => task.id === parseInt(draggableId.substr(5))
+      );
+
+      const obj: {
+        [id: number]: { order: number; listId: number };
+      } = {};
+      // All cards in source list with order greater than dragged card order
+      sourceUpdatedCards?.forEach((task, index) => {
+        obj[task.id] = {
+          order: index,
+          listId: parseInt(source.droppableId),
+        };
+      });
+
+      const destinationCards = orderBy(
+        queryCache.getQueryData<Card[]>([
+          "cards",
+          parseInt(destination.droppableId),
+        ]),
+        (card) => card.order
+      );
+
+      destinationCards?.splice(destination.index, 0, draggedCard as Card);
+      // All cards in destination list with order greater than equal to destination index
+      destinationCards?.forEach((task, index) => {
+        obj[task.id] = {
+          order: index,
+          listId: parseInt(destination.droppableId),
+        };
+      });
+      // Card which is dragged
+      obj[draggableId.substr(5)] = {
+        order: destination.index,
+        listId: parseInt(destination.droppableId),
+      };
+
+      // Step 1: Remove dragged card from source
+      queryCache.setQueryData(
+        ["cards", parseInt(source.droppableId)],
+        sourceCards?.filter(
+          (task) => !(obj[task.id] && obj[task.id].listId !== task.list.id)
+        )
+      );
+
+      cardReorder([
+        obj,
+        {
+          [source.droppableId]: sourceUpdatedCards ?? [],
+          [destination.droppableId]: destinationCards ?? [],
+        },
+      ]);
     }
-    // For card drag drop outside the list
   };
 
   return (
