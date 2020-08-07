@@ -215,7 +215,6 @@ const App = () => {
       );
 
       destinationCards?.splice(destination.index, 0, draggedCard as Card);
-      // All cards in destination list with order greater than equal to destination index
       destinationCards?.forEach((task, index) => {
         obj[task.id] = {
           order: index,
@@ -228,19 +227,17 @@ const App = () => {
         listId: parseInt(destination.droppableId),
       };
 
-      // Step 1: Remove dragged card from source
-      queryCache.setQueryData(
-        ["cards", parseInt(source.droppableId)],
-        sourceCards?.filter(
-          (task) => !(obj[task.id] && obj[task.id].listId !== task.list.id)
-        )
-      );
-
       cardReorder([
         obj,
         {
-          [source.droppableId]: sourceUpdatedCards ?? [],
-          [destination.droppableId]: destinationCards ?? [],
+          [source.droppableId]: sourceUpdatedCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
+          [destination.droppableId]: destinationCards.map((card, index) => ({
+            ...card,
+            order: index,
+          })),
         },
       ]);
     }
