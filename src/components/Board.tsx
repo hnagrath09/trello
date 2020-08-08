@@ -3,6 +3,8 @@ import arrayMove from "array-move";
 import { orderBy } from "lodash-es";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useQuery, useMutation, queryCache } from "react-query";
+import { Dropdown, Menu } from "antd";
+import HomeIcon from "../icons/HomeIcon";
 import CreateList from "./CreateList";
 import List from "./List";
 import {
@@ -28,6 +30,25 @@ interface List {
   title: string;
   cards?: [{ id: number }];
 }
+
+const profileOptions = (
+  <Menu>
+    <Menu.Item key="0">
+      <div className="w-32 mx-auto">Himanshu Nagrath</div>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="1">
+      <div className="mr-32">Profile and Visibility</div>
+    </Menu.Item>
+    <Menu.Item key="2">Activity</Menu.Item>
+    <Menu.Item key="3">Cards</Menu.Item>
+    <Menu.Item key="4">Settings</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="5">Help</Menu.Item>
+    <Menu.Item key="6">Shortcuts</Menu.Item>
+    <Menu.Item key="7">Log Out</Menu.Item>
+  </Menu>
+);
 
 const Board = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
@@ -222,34 +243,55 @@ const Board = () => {
     [cardReorder, list, listReorder]
   );
   const boardContents = useMemo(() => {
-    return isLoading ? (
-      <div className="w-screen mx-auto my-64 text-lg font-semibold text-center text-white">
-        Loading...
-      </div>
-    ) : error ? (
-      <div>{error.message}</div>
-    ) : (
-      <DragDropContext onDragEnd={handleDrag}>
-        <Droppable droppableId="all-columns" direction="horizontal" type="list">
-          {(provided) => (
-            <div
-              className="flex items-start "
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+    return (
+      <div className="w-screen h-screen bg-blue-600 ">
+        {/* Navbar starts */}
+        <div className="flex items-center justify-between w-screen h-10 mb-4 bg-blue-700">
+          <div className="p-2 ml-2 text-white bg-blue-400 rounded cursor-pointer">
+            <HomeIcon className="w-5 h-5" />
+          </div>
+          <span className="font-medium text-white">My Board</span>
+          <Dropdown overlay={profileOptions} trigger={["click"]}>
+            <span className="p-2 mr-2 text-sm font-semibold text-white bg-blue-400 rounded-full cursor-pointer">
+              HN
+            </span>
+          </Dropdown>
+        </div>
+        {/* Navbar ends */}
+        {isLoading ? (
+          <div className="w-screen mx-auto my-64 text-lg font-semibold text-center text-white">
+            Loading...
+          </div>
+        ) : error ? (
+          <div>{error.message}</div>
+        ) : (
+          <DragDropContext onDragEnd={handleDrag}>
+            <Droppable
+              droppableId="all-columns"
+              direction="horizontal"
+              type="list"
             >
-              {orderBy(list, ["order"], ["asc"]).map((column: List) => (
-                <List
-                  key={column.id}
-                  list={column}
-                  updateTitle={handleListTitle}
-                />
-              ))}
-              {provided.placeholder}
-              <CreateList getTitle={handleCreateList} />
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+              {(provided) => (
+                <div
+                  className="flex items-start "
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {orderBy(list, ["order"], ["asc"]).map((column: List) => (
+                    <List
+                      key={column.id}
+                      list={column}
+                      updateTitle={handleListTitle}
+                    />
+                  ))}
+                  {provided.placeholder}
+                  <CreateList getTitle={handleCreateList} />
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
+      </div>
     );
   }, [error, handleCreateList, handleDrag, handleListTitle, isLoading, list]);
 

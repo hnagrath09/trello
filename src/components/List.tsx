@@ -12,7 +12,7 @@ import {
 } from "../queries/cardQueries";
 
 import useStateFromProp from "../hooks/useStateFromProp";
-import HorizontalDotsIcon from "./icons/HorizontalDotsIcon";
+import HorizontalDotsIcon from "../icons/HorizontalDotsIcon";
 import { orderBy } from "lodash-es";
 
 const listOptions = (

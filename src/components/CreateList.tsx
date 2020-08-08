@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import PlusIcon from "./icons/PlusIcon";
+import PlusIcon from "../icons/PlusIcon";
 import CreateListForm from "./CreateListForm";
 
 interface Props

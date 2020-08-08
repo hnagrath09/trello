@@ -3,8 +3,8 @@ import { Draggable } from "react-beautiful-dnd";
 import { Modal } from "antd";
 
 // import Modal from "./Modal";
-import PencilIcon from "./icons/PencilIcon";
-import MenuAlt2Icon from "./icons/MenuAlt2Icon";
+import PencilIcon from "../icons/PencilIcon";
+import MenuAlt2Icon from "../icons/MenuAlt2Icon";
 import CardDetails from "./CardDetails";
 
 interface card {
