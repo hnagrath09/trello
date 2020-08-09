@@ -1,52 +1,84 @@
-import React from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../../../contexts/AuthContext";
+import { Form, Input, Checkbox, Button } from "antd";
 
 const Signup = () => {
+  const { signUpWithEmail } = useContext(AuthContext);
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = useCallback(
+    async ({ name, email, password, rememberMe }) => {
+      setLoading(true);
+      if (!(await signUpWithEmail({ name, email, password, rememberMe }))) {
+        setLoading(false);
+      }
+    },
+    [signUpWithEmail]
+  );
+
   return (
     <div className="max-w-md px-16 py-12 mx-auto bg-white rounded-sm shadow-lg ">
-      <div className="mb-8 font-bold text-center text-gray-700">
-        Sign up for your account
+      <div className="relative z-10 mb-4 text-xl font-bold text-center text-gray-800">
+        Sign up at <span className="text-blue-500">trello</span>
       </div>
-      <form className="flex-col ">
-        <input
-          className="w-full px-2 py-2 mx-auto mb-4 text-sm bg-gray-100 border-2 border-gray-300 "
-          type="text"
-          placeholder="Enter your full name"
-        />
-        <input
-          className="w-full px-2 py-2 mx-auto mb-4 text-sm bg-gray-100 border-2 border-gray-300 "
-          type="email"
-          placeholder="Enter email"
-        />
-        <input
-          className="w-full px-2 py-2 mx-auto mb-4 text-sm bg-gray-100 border-2 border-gray-300 "
-          type="password"
-          placeholder="Create password"
-        />
-        <div className="mb-4 text-xs text-gray-600">
-          By signing up, you confirm that you've read and accepted our Terms of
-          Service and Privacy Policy
-        </div>
-        <button
-          className="w-full py-2 mb-8 text-sm font-bold text-gray-600 bg-gray-300 rounded-sm"
-          type="submit"
-        >
-          Create Account
-        </button>
-      </form>
-      <div className="mb-6 text-sm font-hairline text-center">OR</div>
-
-      <button
-        className="w-full py-2 mb-3 text-sm font-bold text-gray-600 bg-white border rounded-sm shadow"
-        type="submit"
+      <Form
+        layout="vertical"
+        colon={false}
+        onFinish={handleSubmit}
+        initialValues={{ rememberMe: true }}
       >
-        Continue with Google
-      </button>
-
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: "Name is required" }]}
+        >
+          <Input name="name" placeholder="Name" id="name" />
+        </Form.Item>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: "Email is required" },
+            {
+              type: "email",
+              message: "Email is invalid",
+              validateTrigger: "onblur",
+            },
+          ]}
+        >
+          <Input name="email" placeholder="Email" id="email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: "Password is required" }]}
+        >
+          <Input.Password
+            placeholder="Password"
+            type="password"
+            id="password"
+            name="password"
+          />
+        </Form.Item>
+        <Form.Item name="rememberMe" valuePropName="checked">
+          <Checkbox name="rememberMe">Remember Me</Checkbox>
+        </Form.Item>
+        <Button
+          className="w-full"
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+        >
+          Sign up
+        </Button>
+      </Form>
+      <div className="my-4 text-center">Already have an account?</div>
       <Link to="/login">
-        <div className="pt-4 mt-4 text-sm text-center text-blue-500 border-t-2 cursor-pointer hover:underline">
-          Already have an account? Log in
-        </div>
+        <Button className="w-full" type="default">
+          Login
+        </Button>
       </Link>
     </div>
   );
