@@ -10,8 +10,11 @@ const App = () => {
     <Auth>
       <BrowserRouter>
         <Switch>
-          <Route path={["/login", "/signup"]} component={AuthScene} />
-          <Route path="/" component={Board} />
+          <Route
+            path={["/login", "/signup", "/reset-password"]}
+            component={AuthScene}
+          />
+          <Route path="/" exact protectedRoute component={Board} />
         </Switch>
       </BrowserRouter>
     </Auth>
