@@ -8,7 +8,7 @@ interface ErrorMessage {
 export const getErrorMessage = (error?: ErrorMessage[]) => {
   if (error && error[0]) {
     const errorMessage = error[0].messages
-      .map((message) => message.message)
+      ?.map((message) => message.message)
       .join(". ");
     return errorMessage;
   }
