@@ -3,8 +3,6 @@ import arrayMove from "array-move";
 import { orderBy } from "lodash-es";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useQuery, useMutation, queryCache } from "react-query";
-import { Dropdown, Menu } from "antd";
-import HomeIcon from "../icons/HomeIcon";
 import CreateList from "./CreateList";
 import List from "./List";
 import {
@@ -14,10 +12,11 @@ import {
   reorderLists,
 } from "../queries/listQueries";
 import { reorderCards } from "../queries/cardQueries";
+import Navbar from "./Navbar";
 
 interface Card {
-  id: number;
-  list: { id: number; title: string; order: number };
+  _id: string;
+  list: { _id: string; title: string; order: number };
   order: number;
   title: string;
   description: string;
@@ -25,30 +24,10 @@ interface Card {
 }
 
 interface List {
-  id: number;
+  _id: string;
   order: number;
   title: string;
-  cards?: [{ id: number }];
 }
-
-const profileOptions = (
-  <Menu>
-    <Menu.Item key="0">
-      <div className="w-32 mx-auto">Himanshu Nagrath</div>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="1">
-      <div className="mr-32">Profile and Visibility</div>
-    </Menu.Item>
-    <Menu.Item key="2">Activity</Menu.Item>
-    <Menu.Item key="3">Cards</Menu.Item>
-    <Menu.Item key="4">Settings</Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="5">Help</Menu.Item>
-    <Menu.Item key="6">Shortcuts</Menu.Item>
-    <Menu.Item key="7">Log Out</Menu.Item>
-  </Menu>
-);
 
 const Board = () => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
@@ -66,18 +45,20 @@ const Board = () => {
       queryCache.setQueryData(
         "lists",
         list?.map((column) =>
-          column.id === updatedList.id ? { ...column, ...updatedList } : column
+          column._id === updatedList._id
+            ? { ...column, ...updatedList }
+            : column
         )
       );
     },
   });
   const [listReorder] = useMutation(reorderLists, {
-    onMutate: (reorderData: { [id: string]: number }) => {
+    onMutate: (reorderData: { [_id: string]: number }) => {
       queryCache.setQueryData(
         "lists",
         list?.map((column) => ({
           ...column,
-          order: reorderData[column.id] ?? column.order,
+          order: reorderData[column._id] ?? column.order,
         }))
       );
     },
@@ -85,10 +66,7 @@ const Board = () => {
   const [cardReorder] = useMutation(reorderCards, {
     onMutate: ([_, updatedCardsList]) => {
       Object.keys(updatedCardsList).forEach((listId: string) => {
-        queryCache.setQueryData(
-          ["cards", parseInt(listId)],
-          updatedCardsList[parseInt(listId)]
-        );
+        queryCache.setQueryData(["cards", listId], updatedCardsList[listId]);
       });
     },
   });
@@ -101,8 +79,8 @@ const Board = () => {
     [addList, list]
   );
   const handleListTitle = useCallback(
-    (title: string, listId: number) => {
-      editList({ title, id: listId });
+    (title: string, listId: string) => {
+      editList({ title, _id: listId });
     },
     [editList]
   );
@@ -134,9 +112,9 @@ const Board = () => {
           .map((list, index) => ({ ...list, index }))
           .filter((list) => list.order !== list.index);
 
-        const obj: { [id: number]: number } = {};
+        const obj: { [id: string]: number } = {};
         updatedItems.forEach((list) => {
-          obj[list.id] = list.index;
+          obj[list._id] = list.index;
         });
 
         listReorder(obj);
@@ -145,7 +123,7 @@ const Board = () => {
       else if (source.droppableId === destination.droppableId) {
         const card = queryCache.getQueryData<Card[]>([
           "cards",
-          parseInt(source.droppableId),
+          source.droppableId,
         ]);
         const updateCards = arrayMove(
           orderBy(card, (card) => card.order),
@@ -158,12 +136,12 @@ const Board = () => {
           .filter((task) => task.order !== task.index);
 
         const obj: {
-          [id: number]: { order: number; listId: number };
+          [id: string]: { order: number; listId: string };
         } = {};
         updatedItems.forEach((task) => {
-          obj[task.id] = {
+          obj[task._id] = {
             order: task.index,
-            listId: parseInt(source.droppableId),
+            listId: source.droppableId,
           };
         });
         cardReorder([
@@ -178,51 +156,45 @@ const Board = () => {
       } else {
         // When card is dragged and dropped in different list
         const sourceCards = orderBy(
-          queryCache.getQueryData<Card[]>([
-            "cards",
-            parseInt(source.droppableId),
-          ]),
+          queryCache.getQueryData<Card[]>(["cards", source.droppableId]),
           (card) => card.order
         );
 
         const sourceUpdatedCards = sourceCards?.filter(
-          (task) => task.id !== parseInt(draggableId.substr(5))
+          (task) => task._id !== draggableId
         );
 
         const draggedCard = sourceCards?.find(
-          (task) => task.id === parseInt(draggableId.substr(5))
+          (task) => task._id === draggableId
         );
 
         const obj: {
-          [id: number]: { order: number; listId: number };
+          [id: string]: { order: number; listId: string };
         } = {};
         // All cards in source list with order greater than dragged card order
         sourceUpdatedCards?.forEach((task, index) => {
-          obj[task.id] = {
+          obj[task._id] = {
             order: index,
-            listId: parseInt(source.droppableId),
+            listId: source.droppableId,
           };
         });
 
         const destinationCards = orderBy(
-          queryCache.getQueryData<Card[]>([
-            "cards",
-            parseInt(destination.droppableId),
-          ]),
+          queryCache.getQueryData<Card[]>(["cards", destination.droppableId]),
           (card) => card.order
         );
 
         destinationCards?.splice(destination.index, 0, draggedCard as Card);
         destinationCards?.forEach((task, index) => {
-          obj[task.id] = {
+          obj[task._id] = {
             order: index,
-            listId: parseInt(destination.droppableId),
+            listId: destination.droppableId,
           };
         });
         // Card which is dragged
-        obj[draggableId.substr(5)] = {
+        obj[draggableId] = {
           order: destination.index,
-          listId: parseInt(destination.droppableId),
+          listId: destination.droppableId,
         };
 
         cardReorder([
@@ -245,19 +217,7 @@ const Board = () => {
   const boardContents = useMemo(() => {
     return (
       <div className="w-screen h-screen bg-blue-600 ">
-        {/* Navbar starts */}
-        <div className="flex items-center justify-between w-screen h-10 mb-4 bg-blue-700">
-          <div className="p-2 ml-2 text-white bg-blue-400 rounded cursor-pointer">
-            <HomeIcon className="w-5 h-5" />
-          </div>
-          <span className="font-medium text-white">My Board</span>
-          <Dropdown overlay={profileOptions} trigger={["click"]}>
-            <span className="p-2 mr-2 text-sm font-semibold text-white bg-blue-400 rounded-full cursor-pointer">
-              HN
-            </span>
-          </Dropdown>
-        </div>
-        {/* Navbar ends */}
+        <Navbar />
         {isLoading ? (
           <div className="w-screen mx-auto my-64 text-lg font-semibold text-center text-white">
             Loading...
@@ -279,7 +239,7 @@ const Board = () => {
                 >
                   {orderBy(list, ["order"], ["asc"]).map((column: List) => (
                     <List
-                      key={column.id}
+                      key={column._id}
                       list={column}
                       updateTitle={handleListTitle}
                     />
