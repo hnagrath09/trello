@@ -1,6 +1,6 @@
 {
   "name": "trello",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "dependencies": {
     "@tailwindcss/typography": "^0.2.0",
