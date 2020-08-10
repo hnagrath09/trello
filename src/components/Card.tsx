@@ -3,12 +3,12 @@ import { Draggable } from "react-beautiful-dnd";
 import { Modal } from "antd";
 
 // import Modal from "./Modal";
-import PencilIcon from "./icons/PencilIcon";
-import MenuAlt2Icon from "./icons/MenuAlt2Icon";
+import PencilIcon from "../icons/PencilIcon";
+import MenuAlt2Icon from "../icons/MenuAlt2Icon";
 import CardDetails from "./CardDetails";
 
 interface card {
-  id: number;
+  _id: string;
   order: number;
   title: string;
   description: string;
@@ -18,7 +18,7 @@ interface card {
 interface Props {
   card: card;
   column: {
-    id: number;
+    _id: string;
     order: number;
     title: string;
   };
@@ -49,16 +49,16 @@ const Card: React.FC<Props> = ({
   };
 
   const handleCardDescription = (description: string) => {
-    updateCardDes(description, card.id);
+    updateCardDes(description, card._id);
   };
 
   const handleCardTitle = (title: string) => {
-    updateCardTit(title, card.id);
+    updateCardTit(title, card._id);
   };
 
   return (
     <>
-      <Draggable draggableId={`card-${card.id}`} index={index}>
+      <Draggable draggableId={card._id} index={index}>
         {(provided) => (
           <div
             className="px-2 py-1 mx-2 mt-2 text-sm bg-gray-100 shadow cursor-pointer group"

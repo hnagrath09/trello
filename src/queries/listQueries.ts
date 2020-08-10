@@ -1,13 +1,13 @@
 import Axios from "axios";
 
 interface List {
-  id: number;
+  _id: string;
   order: number;
   title: string;
 }
 
 const client = Axios.create({
-  baseURL: "http://localhost:1337",
+  baseURL: "https://frozen-citadel-41248.herokuapp.com/",
 });
 
 export const fetchLists = async () => {
@@ -28,19 +28,19 @@ export const createList = async ({
 };
 
 export const updateList = async ({
-  id,
+  _id,
   title,
   order,
 }: {
-  id: number;
+  _id: string;
   title?: string;
   order?: number;
 }) => {
-  const { data } = await client.put(`/lists/${id}`, { title, order });
+  const { data } = await client.put(`/lists/${_id}`, { title, order });
   return data;
 };
 
-export const reorderLists = async (updatedItems: { [id: number]: number }) => {
+export const reorderLists = async (updatedItems: { [_id: string]: number }) => {
   const { data } = await client.post<{ success: boolean }>(`/lists/reorder`, {
     updatedItems,
   });

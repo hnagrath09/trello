@@ -1,8 +1,8 @@
 import Axios from "axios";
 
 interface Card {
-  id: number;
-  list: { id: number; title: string; order: number };
+  _id: string;
+  list: { _id: string; title: string; order: number };
   order: number;
   title: string;
   description: string;
@@ -10,11 +10,11 @@ interface Card {
 }
 
 const client = Axios.create({
-  baseURL: "http://localhost:1337",
+  baseURL: "https://frozen-citadel-41248.herokuapp.com/",
 });
 
-export const fetchCardsForList = async (queryName: string, listId: number) => {
-  const { data } = await client.get<Card[]>(`/cards?list.id=${listId}`);
+export const fetchCardsForList = async (queryName: string, listId: string) => {
+  const { data } = await client.get<Card[]>(`/cards?list._id=${listId}`);
   return data;
 };
 
@@ -28,40 +28,40 @@ export const createCard = async ({
   title: string;
   order: number;
   description: string;
-  listId: number;
+  listId: string;
 }) => {
   const { data } = await client.post("/cards", {
     title,
     order,
     description,
-    list: { id: listId },
+    list: { _id: listId },
   });
   return data;
 };
 
 export const updateCard = async ({
-  id,
+  _id,
   title,
   order,
   description,
   listId,
 }: {
-  id: number;
+  _id: string;
   title?: string;
   order?: number;
   description?: string;
-  listId?: number;
+  listId?: string;
 }) => {
   if (listId) {
-    const { data } = await client.put(`/cards/${id}`, {
+    const { data } = await client.put(`/cards/${_id}`, {
       title,
       order,
       description,
-      list: { id: listId },
+      list: { _id: listId },
     });
     return data;
   } else {
-    const { data } = await client.put(`/cards/${id}`, {
+    const { data } = await client.put(`/cards/${_id}`, {
       title,
       order,
       description,
@@ -72,10 +72,10 @@ export const updateCard = async ({
 
 export const reorderCards = async ([updatedItems]: [
   {
-    [id: number]: { order: number; listId: number };
+    [_id: string]: { order: number; listId: string };
   },
   {
-    [id: number]: Card[];
+    [_id: string]: Card[];
   }
 ]) => {
   const { data } = await client.post("/cards/reorder", { updatedItems });

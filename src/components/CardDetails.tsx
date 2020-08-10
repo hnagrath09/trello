@@ -6,21 +6,21 @@ import moment from "moment";
 
 import useStateFromProp from "../hooks/useStateFromProp";
 
-import NewspaperIcon from "./icons/NewspaperIcon";
-import PaperClipIcon from "./icons/PaperClipIcon";
-import UserIcon from "./icons/UserIcon";
-import TagIcon from "./icons/TagIcon";
-import MenuAlt2Icon from "./icons/MenuAlt2Icon";
-import SpeakerPhoneIcon from "./icons/SpeakerPhoneIcon";
-import ShareIcon from "./icons/ShareIcon";
-import ArchiveIcon from "./icons/ArchiveIcon";
-import EyeIcon from "./icons/EyeIcon";
-import CopyIcon from "./icons/CopyIcon";
-import ArrowRightIcon from "./icons/ArrowRightIcon";
-import PhotographIcon from "./icons/PhotographIcon";
-import ClockIcon from "./icons/ClockIcon";
-import ClipboardCheckIcon from "./icons/ClipboardCheckIcon";
-import DownIcon from "./icons/DownIcon";
+import NewspaperIcon from "../icons/NewspaperIcon";
+import PaperClipIcon from "../icons/PaperClipIcon";
+import UserIcon from "../icons/UserIcon";
+import TagIcon from "../icons/TagIcon";
+import MenuAlt2Icon from "../icons/MenuAlt2Icon";
+import SpeakerPhoneIcon from "../icons/SpeakerPhoneIcon";
+import ShareIcon from "../icons/ShareIcon";
+import ArchiveIcon from "../icons/ArchiveIcon";
+import EyeIcon from "../icons/EyeIcon";
+import CopyIcon from "../icons/CopyIcon";
+import ArrowRightIcon from "../icons/ArrowRightIcon";
+import PhotographIcon from "../icons/PhotographIcon";
+import ClockIcon from "../icons/ClockIcon";
+import ClipboardCheckIcon from "../icons/ClipboardCheckIcon";
+import DownIcon from "../icons/DownIcon";
 
 const memberOptions = (
   <Menu>
@@ -154,14 +154,14 @@ const attachmentOptions = (
 
 interface Props {
   cardInfo: {
-    id: number;
+    _id: string;
     order: number;
     title: string;
     description: string;
     created_at: string;
   };
   listInfo: {
-    id: number;
+    _id: string;
     order: number;
     title: string;
   };
