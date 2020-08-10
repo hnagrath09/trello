@@ -154,14 +154,14 @@ const attachmentOptions = (
 
 interface Props {
   cardInfo: {
-    id: number;
+    _id: string;
     order: number;
     title: string;
     description: string;
     created_at: string;
   };
   listInfo: {
-    id: number;
+    _id: string;
     order: number;
     title: string;
   };
