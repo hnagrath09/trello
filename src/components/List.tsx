@@ -38,8 +38,8 @@ const listOptions = (
 );
 
 interface Card {
-  id: number;
-  list: { id: number; title: string; order: number };
+  _id: string;
+  list: { _id: string; title: string; order: number };
   order: number;
   title: string;
   description: string;
@@ -47,17 +47,17 @@ interface Card {
 }
 
 interface Props {
-  list: { id: number; order: number; title: string; cards?: [{ id: number }] };
-  updateTitle: (title: string, listId: number) => void;
+  list: { _id: string; order: number; title: string };
+  updateTitle: (title: string, listId: string) => void;
 }
 
 const List: React.FC<Props> = ({ list, updateTitle }) => {
-  const { data: card } = useQuery(["cards", list.id], fetchCardsForList);
+  const { data: card } = useQuery(["cards", list._id], fetchCardsForList);
 
   const [addCard] = useMutation(createCard, {
     onSuccess: (createdCard) => {
       queryCache.setQueryData(
-        ["cards", list.id],
+        ["cards", list._id],
         card ? [...card, createdCard] : createdCard
       );
     },
@@ -66,9 +66,9 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
   const [editCard] = useMutation(updateCard, {
     onMutate: (updatedCard) => {
       queryCache.setQueryData(
-        ["cards", list.id],
-        card?.map((task: Card) =>
-          task.id === updatedCard.id ? { ...task, ...updatedCard } : task
+        ["cards", list._id],
+        card?.map((task) =>
+          task._id === updatedCard._id ? { ...task, ...updatedCard } : task
         )
       );
     },
@@ -83,21 +83,21 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
         title,
         description: "",
         order: card?.length ?? 0,
-        listId: list.id,
+        listId: list._id,
       });
     }
   };
 
-  const handleCardDescription = (description: string, cardId: number) => {
-    editCard({ id: cardId, description });
+  const handleCardDescription = (description: string, cardId: string) => {
+    editCard({ _id: cardId, description });
   };
 
-  const handleCardTitle = (title: string, cardId: number) => {
-    editCard({ id: cardId, title });
+  const handleCardTitle = (title: string, cardId: string) => {
+    editCard({ _id: cardId, title });
   };
 
   return (
-    <Draggable draggableId={list.id.toString()} index={list.order}>
+    <Draggable draggableId={list._id} index={list.order}>
       {(provided) => (
         <div
           className="w-64 pt-2 mx-2 bg-gray-300 rounded-sm "
@@ -112,7 +112,7 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  updateTitle(listTitle, list.id);
+                  updateTitle(listTitle, list._id);
                   setEditListTitle(false);
                 }}
               >
@@ -147,13 +147,13 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
               </div>
             </Dropdown>
           </div>
-          <Droppable droppableId={list.id.toString()}>
+          <Droppable droppableId={list._id}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {orderBy(card, (card) => card.order)?.map(
                   (task: Card, index) => (
                     <Card
-                      key={task.id}
+                      key={task._id}
                       card={task}
                       column={list}
                       index={index}
