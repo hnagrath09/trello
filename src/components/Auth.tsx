@@ -6,7 +6,7 @@ import { getErrorMessage } from "../utils/error";
 import AuthContext from "../contexts/AuthContext";
 
 const client = Axios.create({
-  baseURL: "http://localhost:1337",
+  baseURL: "https://frozen-citadel-41248.herokuapp.com/",
 });
 
 const Auth: React.FC = ({ children }) => {
