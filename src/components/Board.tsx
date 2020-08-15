@@ -29,7 +29,7 @@ interface List {
   title: string;
 }
 
-const Board = () => {
+const Board = ({ match }: { match: any }) => {
   const { isLoading, data: list, error } = useQuery("lists", fetchLists);
   const [addList] = useMutation(createList, {
     onSuccess: (createdList) => {
