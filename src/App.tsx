@@ -5,6 +5,7 @@ import AuthScene from "./pages/Auth";
 import { Switch, BrowserRouter } from "react-router-dom";
 import Route from "./components/Route";
 import Home from "./pages/Home";
+import Board from "./components/Board";
 
 const App = () => {
   return (
@@ -16,6 +17,13 @@ const App = () => {
             component={AuthScene}
           />
           <Route path="/" exact protectedRoute component={Home} />
+          <Route
+            path="/:boardId"
+            protectedRoute
+            render={(props) => {
+              return <Board {...props} />;
+            }}
+          />
         </Switch>
       </BrowserRouter>
     </Auth>
