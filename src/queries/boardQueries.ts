@@ -16,7 +16,7 @@ export const createBoard = async ({
 }) => {
   const { data } = await client.post("/boards", {
     title: "Untitled board",
-    users: { _id: userId },
+    users: [{ _id: userId }],
   });
   return data;
 };
