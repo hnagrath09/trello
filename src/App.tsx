@@ -2,7 +2,7 @@ import React from "react";
 // import Board from "./components/Board";
 import Auth from "./components/Auth";
 import AuthScene from "./pages/Auth";
-import { Switch, BrowserRouter } from "react-router-dom";
+import { Switch, BrowserRouter, Redirect } from "react-router-dom";
 import Route from "./components/Route";
 import Home from "./pages/Home";
 import Board from "./components/Board";
@@ -16,9 +16,12 @@ const App = () => {
             path={["/login", "/signup", "/reset-password"]}
             component={AuthScene}
           />
-          <Route path="/" exact protectedRoute component={Home} />
+          <Route path="/" exact protectedRoute>
+            <Redirect to="/boards" />
+          </Route>
+          <Route path="/boards" exact protectedRoute component={Home} />
           <Route
-            path="/:boardId"
+            path="/boards/:boardId"
             protectedRoute
             render={(props) => {
               return <Board {...props} />;
