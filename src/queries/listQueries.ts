@@ -10,8 +10,8 @@ const client = Axios.create({
   baseURL: "https://frozen-citadel-41248.herokuapp.com/",
 });
 
-export const fetchLists = async () => {
-  const { data } = await client.get<List[]>("/lists");
+export const fetchListsForBoard = async (querName: string, boardId: string) => {
+  const { data } = await client.get<List[]>(`/lists?board._id=${boardId}`);
   return data;
 };
 
@@ -19,11 +19,17 @@ export const fetchLists = async () => {
 export const createList = async ({
   title,
   order,
+  boardId,
 }: {
   title: string;
   order: number;
+  boardId: string;
 }) => {
-  const { data } = await client.post("/lists", { title, order });
+  const { data } = await client.post("/lists", {
+    title,
+    order,
+    board: { _id: boardId },
+  });
   return data;
 };
 
