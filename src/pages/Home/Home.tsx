@@ -51,7 +51,7 @@ const Home = ({ history }: { history: any }) => {
       </div>
       <div className="flex flex-wrap max-w-6xl mx-auto mt-8">
         {board?.map((item: Board) => (
-          <Link to={`/${item._id}`} key={item._id}>
+          <Link to={`/boards/${item._id}`} key={item._id}>
             <Card
               hoverable
               style={{ width: 240 }}
