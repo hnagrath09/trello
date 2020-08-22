@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Dropdown, Menu } from "antd";
 import HomeIcon from "../icons/HomeIcon";
 import AuthContext from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { signOut } = useContext(AuthContext);
@@ -33,9 +34,11 @@ const Navbar = () => {
   );
   return (
     <div className="flex items-center justify-between w-screen h-10 mb-4 bg-blue-700">
-      <div className="p-2 ml-2 text-white bg-blue-400 rounded cursor-pointer">
-        <HomeIcon className="w-5 h-5" />
-      </div>
+      <Link to="/">
+        <div className="p-2 ml-2 text-white bg-blue-400 rounded cursor-pointer">
+          <HomeIcon className="w-5 h-5" />
+        </div>
+      </Link>
       <span className="font-medium text-white">My Board</span>
       <Dropdown overlay={profileOptions} trigger={["click"]}>
         <span className="p-2 mr-2 text-sm font-semibold text-white bg-blue-400 rounded-full cursor-pointer">

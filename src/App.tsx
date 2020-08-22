@@ -1,9 +1,11 @@
 import React from "react";
-import Board from "./components/Board";
+// import Board from "./components/Board";
 import Auth from "./components/Auth";
-import AuthScene from "./pages/Auth/Auth";
-import { Switch, BrowserRouter } from "react-router-dom";
+import AuthScene from "./pages/Auth";
+import { Switch, BrowserRouter, Redirect } from "react-router-dom";
 import Route from "./components/Route";
+import Home from "./pages/Home";
+import Board from "./components/Board";
 
 const App = () => {
   return (
@@ -14,7 +16,17 @@ const App = () => {
             path={["/login", "/signup", "/reset-password"]}
             component={AuthScene}
           />
-          <Route path="/" exact protectedRoute component={Board} />
+          <Route path="/" exact protectedRoute>
+            <Redirect to="/boards" />
+          </Route>
+          <Route path="/boards" exact protectedRoute component={Home} />
+          <Route
+            path="/boards/:boardId"
+            protectedRoute
+            render={(props) => {
+              return <Board {...props} />;
+            }}
+          />
         </Switch>
       </BrowserRouter>
     </Auth>
