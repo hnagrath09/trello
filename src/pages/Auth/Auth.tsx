@@ -9,7 +9,7 @@ const Auth = () => {
   const { user } = useContext(AuthContext);
 
   if (user) {
-    return <Redirect to={{ pathname: "/" }} />;
+    return <Redirect to={{ pathname: "/boards" }} />;
   }
 
   return (

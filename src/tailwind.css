@@ -2,4 +2,8 @@
 
 @tailwind components;
 
+svg {
+  vertical-align: initial;
+}
+
 @tailwind utilities;

@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from "react";
 import arrayMove from "array-move";
-import { orderBy } from "lodash-es";
+import { orderBy, get } from "lodash-es";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useQuery, useMutation, queryCache } from "react-query";
 import CreateList from "./CreateList";
 import List from "./List";
 import {
-  fetchLists,
+  fetchListsForBoard,
   createList,
   updateList,
   reorderLists,
@@ -29,12 +29,18 @@ interface List {
   title: string;
 }
 
-const Board = () => {
-  const { isLoading, data: list, error } = useQuery("lists", fetchLists);
+const Board = ({ match }: { match: any }) => {
+  const boardId = get(match, "params.boardId");
+
+  const { isLoading, data: list, error } = useQuery(
+    ["lists", boardId],
+    fetchListsForBoard
+  );
+
   const [addList] = useMutation(createList, {
     onSuccess: (createdList) => {
       queryCache.setQueryData(
-        "lists",
+        ["lists", boardId],
         list ? [...list, createdList] : [createdList]
       );
     },
@@ -43,7 +49,7 @@ const Board = () => {
     // data passed to editList function
     onMutate: (updatedList) => {
       queryCache.setQueryData(
-        "lists",
+        ["lists", boardId],
         list?.map((column) =>
           column._id === updatedList._id
             ? { ...column, ...updatedList }
@@ -73,10 +79,10 @@ const Board = () => {
   const handleCreateList = useCallback(
     (title: string) => {
       if (title) {
-        addList({ title, order: list?.length ?? 0 });
+        addList({ title, order: list?.length ?? 0, boardId });
       }
     },
-    [addList, list]
+    [addList, list, boardId]
   );
   const handleListTitle = useCallback(
     (title: string, listId: string) => {
