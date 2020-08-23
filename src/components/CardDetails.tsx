@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Dropdown, Menu, Calendar, Button } from "antd";
+import { Dropdown, Menu, Calendar } from "antd";
 import "antd/dist/antd.css";
 import moment from "moment";
 
@@ -21,8 +21,9 @@ import PhotographIcon from "../icons/PhotographIcon";
 import ClockIcon from "../icons/ClockIcon";
 import ClipboardCheckIcon from "../icons/ClipboardCheckIcon";
 import DownIcon from "../icons/DownIcon";
-import AtSymbolIcon from "../icons/AtSymbolIcon";
-import EmojiHappyIcon from "../icons/EmojiHappyIcon";
+import { useQuery } from "react-query";
+import { fetchCommentsForCard } from "../queries/commentQueries";
+import CreateComment from "./CreateComment";
 
 const memberOptions = (
   <Menu>
@@ -153,6 +154,11 @@ const attachmentOptions = (
     </div>
   </Menu>
 );
+interface Comment {
+  _id: string;
+  text: string;
+  createdAt: string;
+}
 
 interface Props {
   cardInfo: {
@@ -160,7 +166,7 @@ interface Props {
     order: number;
     title: string;
     description: string;
-    created_at: string;
+    createdAt: string;
   };
   listInfo: {
     _id: string;
@@ -182,7 +188,10 @@ const CardDetails: React.FC<Props> = ({
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useStateFromProp(cardInfo.description);
 
-  const [addComment, setAddComment] = useState<boolean>(false);
+  const { data: comments } = useQuery(
+    ["comments", cardInfo._id],
+    fetchCommentsForCard
+  );
 
   return (
     <>
@@ -300,58 +309,45 @@ const CardDetails: React.FC<Props> = ({
               Hide Details
             </div>
           </div>
-
-          {/* Enter comment */}
-          <div className="flex items-start my-4">
-            <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
-              HN
-            </span>
-            {addComment ? (
-              <form className="w-full ml-2 bg-white shadow-lg">
-                <input
-                  className="w-full px-3 py-1 text-sm text-gray-700 bg-white focus:outline-none"
-                  autoFocus
-                  placeholder="Write a comment..."
-                />
-                <div className="flex items-center justify-between px-2 mt-4 mb-2">
-                  <Button>Save</Button>
-                  <div className="flex items-center justify-center text-gray-700">
-                    <div className="p-2 mr-2 rounded-sm cursor-pointer hover:bg-gray-300">
-                      <PaperClipIcon className="w-4 h-4 " />
-                    </div>
-                    <div className="p-2 mr-2 rounded-sm cursor-pointer hover:bg-gray-300">
-                      <AtSymbolIcon className="w-4 h-4" />
-                    </div>
-                    <div className="p-2 rounded-sm cursor-pointer hover:bg-gray-300">
-                      <EmojiHappyIcon className="w-4 h-4" />
-                    </div>
+          <CreateComment cardId={cardInfo._id} />
+          {/* Activities start */}
+          <div>
+            {comments?.map((comment: Comment) => (
+              <div className="flex items-start mb-4">
+                <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
+                  HN
+                </span>
+                <div>
+                  <div className="mb-3 ml-3 font-bold">
+                    Himanshu Nagrath
+                    <span className="text-xs font-normal">
+                      {" "}
+                      {moment(comment?.createdAt).fromNow()}
+                    </span>
                   </div>
+                  <span className="px-3 py-2 ml-3 bg-white shadow">
+                    {comment.text}
+                  </span>
                 </div>
-              </form>
-            ) : (
-              <div
-                className="w-full px-3 py-1 ml-2 text-sm text-gray-700 bg-white cursor-pointer"
-                onClick={() => setAddComment(true)}
-              >
-                Write a comment...
               </div>
-            )}
-          </div>
-          <div className="flex items-center ">
-            <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
-              HN
-            </span>
-            <div>
-              <div>
-                <span className="ml-3 font-bold">Himanshu Nagrath</span>
-                <span> added this card to </span>
-                <span>{listInfo.title}</span>
-              </div>
-              <span className="ml-3 text-xs">
-                {moment(cardInfo.created_at).fromNow()}
+            ))}
+            <div className="flex items-center">
+              <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
+                HN
               </span>
+              <div>
+                <div>
+                  <span className="ml-3 font-bold">Himanshu Nagrath</span>
+                  <span> added this card to </span>
+                  <span>{listInfo.title}</span>
+                </div>
+                <span className="ml-3 text-xs">
+                  {moment(cardInfo.createdAt).fromNow()}
+                </span>
+              </div>
             </div>
           </div>
+          {/* Activities End */}
         </div>
 
         {/* Right side of modal */}
