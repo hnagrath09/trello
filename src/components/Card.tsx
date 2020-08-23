@@ -6,17 +6,11 @@ import { Modal } from "antd";
 import PencilIcon from "../icons/PencilIcon";
 import MenuAlt2Icon from "../icons/MenuAlt2Icon";
 import CardDetails from "./CardDetails";
-
-interface card {
-  _id: string;
-  order: number;
-  title: string;
-  description: string;
-  createdAt: string;
-}
+import { CardType } from "../types/card";
+import AnnotationIcon from "../icons/AnnotationIcon";
 
 interface Props {
-  card: card;
+  card: CardType;
   column: {
     _id: string;
     order: number;
@@ -71,9 +65,17 @@ const Card: React.FC<Props> = ({
               {card.title}
               <PencilIcon className="hidden w-3 h-3 group-hover:block" />
             </div>
-            {card.description ? (
-              <MenuAlt2Icon className="w-4 h-4 my-1" />
-            ) : undefined}
+            <div className="flex items-center">
+              {card.description ? (
+                <MenuAlt2Icon className="w-4 h-4 my-1 mr-2" />
+              ) : undefined}
+              {card.comments && card.comments.length !== 0 ? (
+                <div className="flex items-center">
+                  <AnnotationIcon className="w-4 h-4 my-1 mr-1" />
+                  <div className="text-sm">{card.comments.length}</div>
+                </div>
+              ) : undefined}
+            </div>
           </div>
         )}
       </Draggable>
