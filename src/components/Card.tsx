@@ -12,7 +12,7 @@ interface card {
   order: number;
   title: string;
   description: string;
-  created_at: string;
+  createdAt: string;
 }
 
 interface Props {
