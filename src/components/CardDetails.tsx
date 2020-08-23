@@ -24,6 +24,7 @@ import DownIcon from "../icons/DownIcon";
 import { useQuery } from "react-query";
 import { fetchCommentsForCard } from "../queries/commentQueries";
 import CreateComment from "./CreateComment";
+import { CardType } from "../types/card";
 
 const memberOptions = (
   <Menu>
@@ -161,13 +162,7 @@ interface Comment {
 }
 
 interface Props {
-  cardInfo: {
-    _id: string;
-    order: number;
-    title: string;
-    description: string;
-    createdAt: string;
-  };
+  cardInfo: CardType;
   listInfo: {
     _id: string;
     order: number;
@@ -196,10 +191,11 @@ const CardDetails: React.FC<Props> = ({
   return (
     <>
       {/* Title Starting */}
-      <div className="flex items-center mt-5 ml-3 text-lg font-semibold text-gray-700">
+      <div className="flex items-center mt-5 text-lg font-semibold text-gray-700">
         <NewspaperIcon className="w-6 h-6 mr-3" />
         {editCardTitle ? (
           <form
+            className="w-full pr-8"
             onSubmit={(event) => {
               event.preventDefault();
               updateCardTitle(cardTitle);
@@ -207,7 +203,7 @@ const CardDetails: React.FC<Props> = ({
             }}
           >
             <input
-              className="pl-1 -ml-1 font-semibold text-gray-700 border-2 border-blue-600 rounded-sm focus:outline-none"
+              className="w-full pl-1 -ml-1 font-semibold text-gray-700 border-2 border-blue-600 rounded-sm focus:outline-none"
               autoFocus
               onChange={(event: {
                 target: { value: React.SetStateAction<string> };
@@ -226,8 +222,8 @@ const CardDetails: React.FC<Props> = ({
           </div>
         )}
       </div>
-      <div className="ml-2">
-        <span className="ml-12 text-sm text-gray-700">in list</span>
+      <div>
+        <span className="ml-10 text-sm text-gray-700">in list</span>
         <span className="ml-1 text-sm text-gray-700 underline">
           {listInfo.title}
         </span>
@@ -235,7 +231,7 @@ const CardDetails: React.FC<Props> = ({
       {/* Title End */}
 
       <div className="flex">
-        <div className="w-3/4 ml-3">
+        <div className="w-3/4">
           {/* Card Description */}
           <div className="flex items-center mt-6">
             <MenuAlt2Icon className="w-6 h-6 mr-3" />
@@ -320,8 +316,7 @@ const CardDetails: React.FC<Props> = ({
                 <div>
                   <div className="mb-3 ml-3 font-bold">
                     Himanshu Nagrath
-                    <span className="text-xs font-normal">
-                      {" "}
+                    <span className="ml-1 text-xs font-normal">
                       {moment(comment?.createdAt).fromNow()}
                     </span>
                   </div>
@@ -331,7 +326,7 @@ const CardDetails: React.FC<Props> = ({
                 </div>
               </div>
             ))}
-            <div className="flex items-center">
+            <div className="flex items-center mb-16">
               <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
                 HN
               </span>
