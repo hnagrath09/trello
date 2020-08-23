@@ -61,7 +61,7 @@ const Board = ({ match }: { match: any }) => {
   const [listReorder] = useMutation(reorderLists, {
     onMutate: (reorderData: { [_id: string]: number }) => {
       queryCache.setQueryData(
-        "lists",
+        ["lists", boardId],
         list?.map((column) => ({
           ...column,
           order: reorderData[column._id] ?? column.order,
@@ -106,7 +106,7 @@ const Board = ({ match }: { match: any }) => {
       }
       // For list drag drop
       if (type === "list" && list) {
-        const list = queryCache.getQueryData<List[]>("lists");
+        const list = queryCache.getQueryData<List[]>(["lists", boardId]);
         const updatedList = arrayMove(
           orderBy(list, (list) => list.order),
           source.index,
@@ -218,7 +218,7 @@ const Board = ({ match }: { match: any }) => {
         ]);
       }
     },
-    [cardReorder, list, listReorder]
+    [cardReorder, list, listReorder, boardId]
   );
   const boardContents = useMemo(() => {
     return (
