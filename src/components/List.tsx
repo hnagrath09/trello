@@ -14,6 +14,7 @@ import {
 import useStateFromProp from "../hooks/useStateFromProp";
 import HorizontalDotsIcon from "../icons/HorizontalDotsIcon";
 import { orderBy } from "lodash-es";
+import { CardType } from "../types/card";
 
 const listOptions = (
   <Menu>
@@ -36,15 +37,6 @@ const listOptions = (
     <Menu.Item key="8">Archive This List</Menu.Item>
   </Menu>
 );
-
-interface Card {
-  _id: string;
-  list: { _id: string; title: string; order: number };
-  order: number;
-  title: string;
-  description: string;
-  createdAt: string;
-}
 
 interface Props {
   list: { _id: string; order: number; title: string };
@@ -151,7 +143,7 @@ const List: React.FC<Props> = ({ list, updateTitle }) => {
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {orderBy(card, (card) => card.order)?.map(
-                  (task: Card, index) => (
+                  (task: CardType, index) => (
                     <Card
                       key={task._id}
                       card={task}
