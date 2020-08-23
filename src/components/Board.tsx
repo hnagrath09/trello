@@ -13,15 +13,7 @@ import {
 } from "../queries/listQueries";
 import { reorderCards } from "../queries/cardQueries";
 import Navbar from "./Navbar";
-
-interface Card {
-  _id: string;
-  list: { _id: string; title: string; order: number };
-  order: number;
-  title: string;
-  description: string;
-  createdAt: string;
-}
+import { CardType } from "../types/card";
 
 interface List {
   _id: string;
@@ -127,7 +119,7 @@ const Board = ({ match }: { match: any }) => {
       }
       // For card drag drop within the same list
       else if (source.droppableId === destination.droppableId) {
-        const card = queryCache.getQueryData<Card[]>([
+        const card = queryCache.getQueryData<CardType[]>([
           "cards",
           source.droppableId,
         ]);
@@ -162,7 +154,7 @@ const Board = ({ match }: { match: any }) => {
       } else {
         // When card is dragged and dropped in different list
         const sourceCards = orderBy(
-          queryCache.getQueryData<Card[]>(["cards", source.droppableId]),
+          queryCache.getQueryData<CardType[]>(["cards", source.droppableId]),
           (card) => card.order
         );
 
@@ -186,11 +178,14 @@ const Board = ({ match }: { match: any }) => {
         });
 
         const destinationCards = orderBy(
-          queryCache.getQueryData<Card[]>(["cards", destination.droppableId]),
+          queryCache.getQueryData<CardType[]>([
+            "cards",
+            destination.droppableId,
+          ]),
           (card) => card.order
         );
 
-        destinationCards?.splice(destination.index, 0, draggedCard as Card);
+        destinationCards?.splice(destination.index, 0, draggedCard as CardType);
         destinationCards?.forEach((task, index) => {
           obj[task._id] = {
             order: index,
