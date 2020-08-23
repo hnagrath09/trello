@@ -1,20 +1,12 @@
 import Axios from "axios";
-
-interface Card {
-  _id: string;
-  list: { _id: string; title: string; order: number };
-  order: number;
-  title: string;
-  description: string;
-  createdAt: string;
-}
+import { CardType } from "../types/card";
 
 const client = Axios.create({
   baseURL: "https://frozen-citadel-41248.herokuapp.com/",
 });
 
 export const fetchCardsForList = async (queryName: string, listId: string) => {
-  const { data } = await client.get<Card[]>(`/cards?list._id=${listId}`);
+  const { data } = await client.get<CardType[]>(`/cards?list._id=${listId}`);
   return data;
 };
 
@@ -75,7 +67,7 @@ export const reorderCards = async ([updatedItems]: [
     [_id: string]: { order: number; listId: string };
   },
   {
-    [_id: string]: Card[];
+    [_id: string]: CardType[];
   }
 ]) => {
   const { data } = await client.post("/cards/reorder", { updatedItems });
