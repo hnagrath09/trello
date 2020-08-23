@@ -20,7 +20,7 @@ interface Card {
   order: number;
   title: string;
   description: string;
-  created_at: string;
+  createdAt: string;
 }
 
 interface List {
