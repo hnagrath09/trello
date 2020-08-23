@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Dropdown, Menu, Calendar } from "antd";
+import { Dropdown, Menu, Calendar, Button } from "antd";
 import "antd/dist/antd.css";
 import moment from "moment";
 
@@ -21,6 +21,8 @@ import PhotographIcon from "../icons/PhotographIcon";
 import ClockIcon from "../icons/ClockIcon";
 import ClipboardCheckIcon from "../icons/ClipboardCheckIcon";
 import DownIcon from "../icons/DownIcon";
+import AtSymbolIcon from "../icons/AtSymbolIcon";
+import EmojiHappyIcon from "../icons/EmojiHappyIcon";
 
 const memberOptions = (
   <Menu>
@@ -180,10 +182,12 @@ const CardDetails: React.FC<Props> = ({
   const [editDescription, setEditDescription] = useState<boolean>(false);
   const [description, setDescription] = useStateFromProp(cardInfo.description);
 
+  const [addComment, setAddComment] = useState<boolean>(false);
+
   return (
     <>
       {/* Title Starting */}
-      <div className="flex items-center mt-5 ml-5 text-lg font-semibold text-gray-700">
+      <div className="flex items-center mt-5 ml-3 text-lg font-semibold text-gray-700">
         <NewspaperIcon className="w-6 h-6 mr-3" />
         {editCardTitle ? (
           <form
@@ -222,7 +226,7 @@ const CardDetails: React.FC<Props> = ({
       {/* Title End */}
 
       <div className="flex">
-        <div className="w-3/4 ml-5">
+        <div className="w-3/4 ml-3">
           {/* Card Description */}
           <div className="flex items-center mt-6">
             <MenuAlt2Icon className="w-6 h-6 mr-3" />
@@ -298,13 +302,40 @@ const CardDetails: React.FC<Props> = ({
           </div>
 
           {/* Enter comment */}
-          <div className="flex items-center my-4">
+          <div className="flex items-start my-4">
             <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
               HN
             </span>
-            <div className="w-full px-3 py-1 ml-2 text-sm text-gray-700 bg-white">
-              Write a comment...
-            </div>
+            {addComment ? (
+              <form className="w-full ml-2 bg-white shadow-lg">
+                <input
+                  className="w-full px-3 py-1 text-sm text-gray-700 bg-white focus:outline-none"
+                  autoFocus
+                  placeholder="Write a comment..."
+                />
+                <div className="flex items-center justify-between px-2 mt-4 mb-2">
+                  <Button>Save</Button>
+                  <div className="flex items-center justify-center text-gray-700">
+                    <div className="p-2 mr-2 rounded-sm cursor-pointer hover:bg-gray-300">
+                      <PaperClipIcon className="w-4 h-4 " />
+                    </div>
+                    <div className="p-2 mr-2 rounded-sm cursor-pointer hover:bg-gray-300">
+                      <AtSymbolIcon className="w-4 h-4" />
+                    </div>
+                    <div className="p-2 rounded-sm cursor-pointer hover:bg-gray-300">
+                      <EmojiHappyIcon className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <div
+                className="w-full px-3 py-1 ml-2 text-sm text-gray-700 bg-white cursor-pointer"
+                onClick={() => setAddComment(true)}
+              >
+                Write a comment...
+              </div>
+            )}
           </div>
           <div className="flex items-center ">
             <span className="p-2 -ml-1 text-xs font-bold text-center text-gray-700 bg-gray-300 rounded-full ">
